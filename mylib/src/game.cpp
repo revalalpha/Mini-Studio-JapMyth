@@ -27,89 +27,89 @@ Hero& Game::getPlayer()
 //    return m_boss.get();
 //}
 
-//void Game::checkCollision()
-//{
-//    if (m_player.getHitbox().top + m_player.getHitbox().height > getGroundHitbox().top)
-//    {
-//        m_player.getSprite().setPosition(m_player.getPlayerPosition().x, getGroundHitbox().top - m_player.getHitbox().height);
-//        m_player.setOnGround(true);
-//    }
-//    else
-//        m_player.setOnGround(false);
-//
-//    if (m_boss->getHitbox().top + m_boss->getHitbox().height > getGroundHitbox().top)
-//        m_boss->getSprite().setPosition(m_boss->getSprite().getPosition().x, getGroundHitbox().top - m_boss->getHitbox().height);
-//
-//    sf::FloatRect windowBounds = GetWindowCollision();
-//    sf::FloatRect playerHitbox = m_player.getHitbox();
-//    sf::FloatRect bossHitbox = m_boss->getHitbox();
-//
-//    if (playerHitbox.left < windowBounds.left)
-//    {
-//        m_player.getSprite().setPosition
-//        (
-//            windowBounds.left + (m_player.getPlayerPosition().x - playerHitbox.left),
-//            m_player.getPlayerPosition().y
-//        );
-//    }
-//
-//    if (playerHitbox.left + playerHitbox.width > windowBounds.left + windowBounds.width)
-//    {
-//        m_player.getSprite().setPosition
-//        (
-//            m_player.getPlayerPosition().x - ((playerHitbox.left + playerHitbox.width) - (windowBounds.left + windowBounds.width)),
-//            m_player.getPlayerPosition().y
-//        );
-//    }
-//
-//    if (bossHitbox.left < windowBounds.left)
-//    {
-//        m_boss->getSprite().setPosition
-//        (
-//            windowBounds.left + (m_boss->getSprite().getPosition().x - bossHitbox.left),
-//            m_boss->getSprite().getPosition().y
-//        );
-//    }
-//
-//    if (bossHitbox.left + bossHitbox.width > windowBounds.left + windowBounds.width)
-//    {
-//        m_boss->getSprite().setPosition
-//        (
-//            m_boss->getSprite().getPosition().x - ((bossHitbox.left + bossHitbox.width) - (windowBounds.left + windowBounds.width)),
-//            m_boss->getSprite().getPosition().y
-//        );
-//    }
-//
-//    /*if (playerHitbox.intersects(bossHitbox))
-//    {
-//       sf::Vector2f playerCenter(
-//           playerHitbox.left + playerHitbox.width / 2.0f,
-//           playerHitbox.top + playerHitbox.height / 2.0f
-//       );
-//       sf::Vector2f bossCenter(
-//           bossHitbox.left + bossHitbox.width / 2.0f,
-//           bossHitbox.top + bossHitbox.height / 2.0f
-//       );
-//
-//       float dx = playerCenter.x - bossCenter.x;
-//       float dy = playerCenter.y - bossCenter.y;
-//
-//       if (std::abs(dx) > std::abs(dy))
-//       {
-//           if (dx > 0)
-//               m_player.getSprite().setPosition(bossHitbox.left + bossHitbox.width, playerHitbox.top);
-//           else
-//               m_player.getSprite().setPosition(bossHitbox.left - playerHitbox.width, playerHitbox.top);
-//       }
-//       else
-//       {
-//           if (dy > 0)
-//               m_player.getSprite().setPosition(playerHitbox.left, bossHitbox.top + bossHitbox.height);
-//           else
-//               m_player.getSprite().setPosition(playerHitbox.left, bossHitbox.top - playerHitbox.height);
-//       }
-//    }*/
-//}
+void Game::checkCollision()
+{
+    if (m_player.getHitbox().top + m_player.getHitbox().height > getGroundHitbox().top)
+    {
+        m_player.getSprite().setPosition(m_player.getPlayerPosition().x, getGroundHitbox().top - m_player.getHitbox().height);
+        m_player.setOnGround(true);
+    }
+    else
+        m_player.setOnGround(false);
+
+    /*if (m_boss->getHitbox().top + m_boss->getHitbox().height > getGroundHitbox().top)
+        m_boss->getSprite().setPosition(m_boss->getSprite().getPosition().x, getGroundHitbox().top - m_boss->getHitbox().height);*/
+
+    sf::FloatRect windowBounds = GetWindowCollision();
+    sf::FloatRect playerHitbox = m_player.getHitbox();
+    /*sf::FloatRect bossHitbox = m_boss->getHitbox();*/
+
+    if (playerHitbox.left < windowBounds.left)
+    {
+        m_player.getSprite().setPosition
+        (
+            windowBounds.left + (m_player.getPlayerPosition().x - playerHitbox.left),
+            m_player.getPlayerPosition().y
+        );
+    }
+
+    if (playerHitbox.left + playerHitbox.width > windowBounds.left + windowBounds.width)
+    {
+        m_player.getSprite().setPosition
+        (
+            m_player.getPlayerPosition().x - ((playerHitbox.left + playerHitbox.width) - (windowBounds.left + windowBounds.width)),
+            m_player.getPlayerPosition().y
+        );
+    }
+
+    /*if (bossHitbox.left < windowBounds.left)
+    {
+        m_boss->getSprite().setPosition
+        (
+            windowBounds.left + (m_boss->getSprite().getPosition().x - bossHitbox.left),
+            m_boss->getSprite().getPosition().y
+        );
+    }
+
+    if (bossHitbox.left + bossHitbox.width > windowBounds.left + windowBounds.width)
+    {
+        m_boss->getSprite().setPosition
+        (
+            m_boss->getSprite().getPosition().x - ((bossHitbox.left + bossHitbox.width) - (windowBounds.left + windowBounds.width)),
+            m_boss->getSprite().getPosition().y
+        );
+    }*/
+
+    /*if (playerHitbox.intersects(bossHitbox))
+    {
+       sf::Vector2f playerCenter(
+           playerHitbox.left + playerHitbox.width / 2.0f,
+           playerHitbox.top + playerHitbox.height / 2.0f
+       );
+       sf::Vector2f bossCenter(
+           bossHitbox.left + bossHitbox.width / 2.0f,
+           bossHitbox.top + bossHitbox.height / 2.0f
+       );
+
+       float dx = playerCenter.x - bossCenter.x;
+       float dy = playerCenter.y - bossCenter.y;
+
+       if (std::abs(dx) > std::abs(dy))
+       {
+           if (dx > 0)
+               m_player.getSprite().setPosition(bossHitbox.left + bossHitbox.width, playerHitbox.top);
+           else
+               m_player.getSprite().setPosition(bossHitbox.left - playerHitbox.width, playerHitbox.top);
+       }
+       else
+       {
+           if (dy > 0)
+               m_player.getSprite().setPosition(playerHitbox.left, bossHitbox.top + bossHitbox.height);
+           else
+               m_player.getSprite().setPosition(playerHitbox.left, bossHitbox.top - playerHitbox.height);
+       }
+    }*/
+}
 
 void Game::setBackground(sf::RenderWindow* window)
 {
