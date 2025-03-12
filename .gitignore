@@ -1,4 +1,2 @@
-.vs
-build
-out
-.gitattributes
+build/*
+external/*
