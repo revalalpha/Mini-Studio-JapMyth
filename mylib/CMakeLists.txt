@@ -8,6 +8,7 @@ set(SOURCES
     ${SOURCE_DIR}/hero.cpp
     ${SOURCE_DIR}/boss.cpp
     ${SOURCE_DIR}/ennemie.cpp
+    ${SOURCE_DIR}/ennemieBehavior.cpp
     ${SOURCE_DIR}/sceneManager.cpp
     ${SOURCE_DIR}/sceneBase.cpp
     ${SOURCE_DIR}/gameObject.cpp
@@ -25,6 +26,7 @@ set(HEADERS
     ${HEADER_DIR}/hero.h
     ${HEADER_DIR}/boss.h
     ${HEADER_DIR}/ennemie.h
+    ${HEADER_DIR}/ennemieBehavior.h
     ${HEADER_DIR}/sceneManager.h
     ${HEADER_DIR}/sceneBase.h
     ${HEADER_DIR}/gameObject.h
