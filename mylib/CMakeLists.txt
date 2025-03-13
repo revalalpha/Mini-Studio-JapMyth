@@ -7,8 +7,11 @@ set(SOURCES
     ${SOURCE_DIR}/engine.cpp
     ${SOURCE_DIR}/hero.cpp
     ${SOURCE_DIR}/boss.cpp
+    ${SOURCE_DIR}/b1Behavior.cpp
+    ${SOURCE_DIR}/b2Behavior.cpp
     ${SOURCE_DIR}/ennemie.cpp
-    ${SOURCE_DIR}/ennemieBehavior.cpp
+    ${SOURCE_DIR}/e1Behavior.cpp
+    ${SOURCE_DIR}/e2Behavior.cpp
     ${SOURCE_DIR}/sceneManager.cpp
     ${SOURCE_DIR}/sceneBase.cpp
     ${SOURCE_DIR}/gameObject.cpp
@@ -25,8 +28,11 @@ set(HEADERS
     ${HEADER_DIR}/engine.h
     ${HEADER_DIR}/hero.h
     ${HEADER_DIR}/boss.h
+    ${HEADER_DIR}/b1Behavior.h
+    ${HEADER_DIR}/b2Behavior.h
     ${HEADER_DIR}/ennemie.h
-    ${HEADER_DIR}/ennemieBehavior.h
+    ${HEADER_DIR}/e1Behavior.h
+    ${HEADER_DIR}/e2Behavior.h
     ${HEADER_DIR}/sceneManager.h
     ${HEADER_DIR}/sceneBase.h
     ${HEADER_DIR}/gameObject.h
