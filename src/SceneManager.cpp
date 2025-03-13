@@ -54,19 +54,6 @@ void SceneManager::processInput()
 
         if (event.type == sf::Event::KeyPressed)
         {
-            //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-            //{
-            //    if (m_currentScene != m_scenes.front().get())
-            //    {
-            //        if (m_currentScene == m_scenes[GAME].get())
-            //            m_currentScene = m_scenes[PAUSE].get();
-            //        else if (m_currentScene == m_scenes[PAUSE].get())
-            //            m_currentScene = m_scenes[GAME].get();
-            //        else if (m_currentScene == m_scenes[CREDIT].get())
-            //            m_currentScene = m_scenes[MENU].get();
-            //    }
-            //}
-
             if (event.key.code == sf::Keyboard::P)
                 m_window->close();
         }

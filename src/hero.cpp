@@ -1,10 +1,13 @@
 #include "hero.h"
+#include "IGameObject.h"
+#include "Game.h"
+#include "TextureCache.h"
 
-#include "resourceManager.h"
-
-Hero::Hero()
+Hero::Hero(IGameObjectContainer& game, const Vec2& position)
+	: IGameObject(game), m_health(100), m_position(position)
 {
     setStateTexture();
+    m_sprites.setTexture(getOwner().getGame().getTextureCache().getTexture("heroMod.png"));
     m_sprites.setScale(2.f, 2.f);
 }
 
@@ -99,7 +102,7 @@ void Hero::setState(stateName newState)
     m_sprites.setTexture(m_textures[newState]);
 }
 
-void Hero::handleInput()
+void Hero::handleInputs(const sf::Event& event)
 {
     m_stateManager.handleInput(*this);
 }
@@ -281,19 +284,6 @@ Hero::stateName Hero::getCurrentState() const
 HeroState& Hero::getStateManager()
 {
     return m_stateManager;
-}
-
-void Hero::setStateTexture()
-{
-    m_textures[stateName::idle].loadFromFile(PathManager::getResourcePath("hero\\IDLE.png"));
-    m_textures[stateName::run].loadFromFile(PathManager::getResourcePath("hero\\RUN.png"));
-    m_textures[stateName::jump].loadFromFile(PathManager::getResourcePath("hero\\JUMP.png"));
-    m_textures[stateName::dodge].loadFromFile(PathManager::getResourcePath("hero\\DASH.png"));
-    m_textures[stateName::attack].loadFromFile(PathManager::getResourcePath("hero\\ATTACK1.png"));
-    m_textures[stateName::jump_attack].loadFromFile(PathManager::getResourcePath("hero\\AIR_ATTACK.png"));
-    m_textures[stateName::block].loadFromFile(PathManager::getResourcePath("hero\\BLOCK.png"));
-    m_textures[stateName::hurt].loadFromFile(PathManager::getResourcePath("hero\\HURT.png"));
-    m_textures[stateName::death].loadFromFile(PathManager::getResourcePath("hero\\DEATH.png"));
 }
 
 void Hero::move(const sf::Vector2f& offset)

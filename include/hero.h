@@ -1,5 +1,5 @@
 #pragma once
-#include "gameObject.h"
+#include "IGameObject.h"
 #include "heroState.h"
 
 namespace HeroStateNames
@@ -21,28 +21,31 @@ namespace HeroStateNames
 class Hero : public IGameObject
 {
 public:
-	Hero();
+	Hero(IGameObjectContainer& game, const Vec2& position);
 	~Hero() override = default;
 
 	using stateName = HeroStateNames::stateName;
 
-	bool isAlive() override;
-	bool isShooting() override;
-	bool isAttacking() override;
-	bool isInvulnerable() override;
+	bool isAlive();
+	bool isShooting();
+	bool isAttacking();
+	bool isInvulnerable();
 	bool isFacingLeft() const;
 	bool isJumping() const;
 	bool isOnGround() const;
 	bool isMoving() const;
 
 
-	void takeDamage(int damage) override;
-	void setInvulnerable(float duration) override;
+	void takeDamage(int damage);
+	void setInvulnerable(float duration);
 	void updateInvulnerabilityEffect();
 	void attacking();
 	void setState(stateName newState);
-	void handleInput();
-	void update(float deltaTime);
+	void handleInputs(const sf::Event& event) override;
+	//void render(sf::RenderWindow& window) override;
+	void update(float deltaTime) override;
+	//OBB getBoundingBox() const override;
+	//GameObjectType gameObjectType() override;
 	void setSpeed(float speed);
 	void move(const sf::Vector2f& offset);
 	void setFacingLeft(bool left);
@@ -56,11 +59,11 @@ public:
 	stateName getCurrentState() const;
 	HeroState& getStateManager();
 
-	void setStateTexture();
+	//void setStateTexture();
 
 
 	int getDamage() const;
-	int getHp() override;
+	int getHp();
 	float getSpeed() const;
 	float getJumpVelocity() const;
 
@@ -82,8 +85,9 @@ public:
 	bool getIsDead(bool newResult);
 
 protected:
-	int m_health = 800;
+	int m_health = 100;
 	int m_attackDmg = 51;
+	Vec2 m_position;
 
 	bool m_isIdle;
 	bool m_isAttacking = true;

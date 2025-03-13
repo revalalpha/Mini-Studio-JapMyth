@@ -87,16 +87,7 @@ Boss::Boss(IGameObjectContainer& game, const Vec2& position)
 
         new BT::FireLaser(untilTheEnd);
 
-
         new BT::IsPlayerDead(P2);
-        
-
-        
-
-        
-        
-
-
 }
 Vec2 Boss::getCenter()const
 {
