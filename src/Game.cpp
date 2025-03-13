@@ -13,18 +13,18 @@
 
 
 
-Game::Game(const std::string& execFilePath)
-    : m_window(sf::VideoMode(), "Boss!", sf::Style::Fullscreen)
-    , m_textureCache(execFilePath)
-	, m_Width(m_window.getSize().x)
-	, m_Height(m_window.getSize().y)
+Game::Game(sf::RenderWindow& window, const std::string& execPath)
+    :// m_window(sf::VideoMode(), "Boss!", sf::Style::Fullscreen)
+     m_textureCache(execPath)
+	, m_Width(window.getSize().x)
+	, m_Height(window.getSize().y)
 {
-    m_window.setFramerateLimit(60);
+    //m_window.setFramerateLimit(60);
     
     font.loadFromFile(this->getTextureCache().getAbsoluteFilepath("arial.ttf"));
     new Barrier(*this,
         Vec2(m_Width / 2.0f, -15.0f),
-        Vec2(m_window.getSize().x + 40.0f, 30.0f)
+        Vec2(m_Width + 40.0f, 30.0f)
     );
 
     new Barrier(*this,
@@ -56,13 +56,13 @@ Vec2 Game::getWindowSize()const
     return { m_Width, m_Height };
 }
 
-void Game::update()
+void Game::update(const float& delaTime)
 {
     _deferedAddObjects();
 
     detectCollision();
     for (auto& gameObject : m_allGameObjects)
-        gameObject->update(1.f / 60.f);
+        gameObject->update(delaTime);
 
     _cleanObject();
 }
@@ -83,27 +83,27 @@ void Game::detectCollision()
     }
 }
 
-void Game::render()
+void Game::render(sf::RenderWindow& window)
 {
-    m_window.clear();
+    //window.clear();
 
     for (auto& gameObject : m_allGameObjects)
-        gameObject->render(m_window);
+        gameObject->render(window);
 
-    renderBoundingBox();
+    //renderBoundingBox();
 
-    m_window.display();
+    window.display();
 }
 
-void Game::renderBoundingBox()
+void Game::renderBoundingBox(sf::RenderWindow& window)
 {
     for (const auto& go : m_allGameObjects)
     {
-        sf::RectangleShape rectangle({m_window.getSize().x-350.f,m_window.getSize().y - 250.f });
+        sf::RectangleShape rectangle({ m_Width -350.f,m_Height - 250.f });
         rectangle.setOutlineColor(sf::Color::Green);
         rectangle.setOutlineThickness(5);
         rectangle.setOrigin(rectangle.getSize().x / 2.f, rectangle.getSize().y / 2);
-        rectangle.setPosition({ m_window.getSize().x/2.f, m_window.getSize().y / 2.f });
+        rectangle.setPosition({ m_Width /2.f, m_Height / 2.f });
         rectangle.setFillColor(sf::Color::Transparent);
     	
         OBB obb = go->getBoundingBox();
@@ -119,33 +119,14 @@ void Game::renderBoundingBox()
             lines.push_back(sf::Vertex{ {corners[i].x, corners[i].y}, col });
             lines.push_back(sf::Vertex{ {corners[nextIdx].x, corners[nextIdx].y}, col });
         }
-        m_window.draw(rectangle);
-        m_window.draw(&lines[0], lines.size(), sf::Lines);
+        window.draw(rectangle);
+        window.draw(&lines[0], lines.size(), sf::Lines);
     }
 }
 
-void Game::run()
-{
-    while (m_window.isOpen())
-    {
-        handleInputs();
-        update();
-        render();
-    }
-}
 
-void Game::handleInputs()
+void Game::handleInputs(const sf::Event& event)
 {
-    sf::Event event;
-    while (m_window.pollEvent(event))
-    {
-        if (event.type == sf::Event::Closed)
-            m_window.close();
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
-            m_window.close();
-        }
-    }
 
     for (auto& go : m_allGameObjects)
         go->handleInputs(event);

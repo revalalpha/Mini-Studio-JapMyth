@@ -18,29 +18,31 @@ public:
 
     friend class IGameObject;
 
-    Game(const std::string& execFilePath);
+    Game(sf::RenderWindow& window,const std::string& execPath);
     ~Game();
 
-    void handleInputs();
+    void handleInputs(const sf::Event& event);
 
-    void update();
+    void update(const float& deltaTime);
 
-    void render();
+    void render(sf::RenderWindow& window);
 
-    void run();
+    //void run();
 
     TextureCache& getTextureCache();
     
     virtual Game& getGame() override { return *this; }
     Vec2 getWindowSize()const;
+    void renderBoundingBox(sf::RenderWindow& window);
 private_function:
     void detectCollision();
     void onCollision(IGameObject* go1, IGameObject* go2);
-    void renderBoundingBox();
+    
 
 private_members:
-    ::sf::RenderWindow m_window;
+    //::sf::RenderWindow m_window;
     TextureCache m_textureCache;
     float m_Width;
     float m_Height;
+    
 };
