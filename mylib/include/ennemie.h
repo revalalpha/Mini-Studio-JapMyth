@@ -11,12 +11,10 @@ namespace EnnemieState
 {
     enum class State
     {
-        Idle,
         Run,
-        Hurt,
-        Attack1,
-        Attack2,
-        Attack3
+        Attack,
+        Death
+
     };
 }
 
@@ -44,6 +42,9 @@ public:
 
     void setState(State newState);
     State getState() const;
+    int getAttackDamage(State attackType) const;
+    sf::Sprite& getSprite();
+    sf::Texture& getTexture(const State& stateName_);
 
 protected:
     Game* m_game;
@@ -55,7 +56,24 @@ protected:
     State m_currentState;
     std::unordered_map<State, AnimationData> m_animations;
     std::unordered_map<State, sf::Texture> m_textures;
-    sf::Sprite m_sprite;
+    sf::Sprite m_sprites;
+    int attackDamage = 10;
+
+    std::map<State, sf::Texture> m_texturesE1;
 };
+
+class Ennemie1 : public IEnnemies
+{
+public:
+    virtual void initializeBehaviorTree() = 0;
+    virtual void update(float deltaTime);
+    virtual void takeDamage(int damage) override;
+    virtual void attack();
+    virtual bool isAlive() override;
+    virtual bool isInvulnerable() override;
+    virtual void draw(sf::RenderWindow& window) const;
+
+};
+
 
 #endif // IENNEMIES_H

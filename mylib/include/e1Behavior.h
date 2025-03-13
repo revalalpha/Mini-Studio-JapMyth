@@ -7,40 +7,64 @@ class Game;
 
 namespace BT
 {
-    class PatrolAction : public IActionNode
+    class Run : public IActionNode
     {
     public:
-        PatrolAction(ICompositeNode* parent) : IActionNode(parent) {}
+        Run(ICompositeNode* parent) : IActionNode(parent) {}
 
         Status tick() override
         {
-            std::cout << "Patrolling..." << std::endl;
             return Success;
         }
     };
 
-    class ChaseAction : public IActionNode
+    class Chase : public IActionNode
     {
     public:
-        ChaseAction(ICompositeNode* parent) : IActionNode(parent) {}
+        Chase(ICompositeNode* parent) : IActionNode(parent) {}
 
         Status tick() override
         {
-            std::cout << "Chasing player..." << std::endl;
             return Success;
         }
     };
 
-    class AttackAction : public IActionNode
+    class Attack : public public BehaviorNodeDecorator<class IEnnemies, IActionNode>
     {
+    private:
+        Game* m_game;
     public:
-        AttackAction(ICompositeNode* parent) : IActionNode(parent) {}
+        Attack(ICompositeNode* parent, Game* game) : BehaviorNodeDecorator(parent), m_game(game) {}
 
         Status tick() override
         {
-            std::cout << "Attacking player!" << std::endl;
+            if (m_game)
+            {
+                Hero& player = m_game->getPlayer();
+                if (player.getHp() <= 0)
+                {
+                    std::cout << "Hero is dead!" << std::endl;
+                    return Failed;
+                }
+            }
+            getGameObject()->setState(IEnnemies::State::Attack);
+            int damage = getGameObject()->getAttackDamage(IEnnemies::State::Attack);
+            if (m_game)
+                m_game->getPlayer().takeDamage(damage);
+
             return Success;
         }
     };
 
+    class Death : public BehaviorNodeDecorator<class IEnnemies, IActionNode>
+    {
+    public:
+        Death(ICompositeNode* parent) : BehaviorNodeDecorator(parent) {}
+        Status tick() override
+        {
+            getGameObject()->setState(IEnnemies::State::Death);
+            getGameObject()->getSprite().setTexture(getGameObject()->getTexture(IEnnemies::State::Death));
+            return Success;
+        }
+    };
 }
