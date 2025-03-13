@@ -20,15 +20,13 @@ void GameScene::setBackground(sf::RenderWindow* window)
 }
 void GameScene::processInput(const sf::Event& event)
 {
-    // Traiter les entrées spécifiques à la scène
-    //if (event.type == sf::Event::KeyPressed)
-    //{
-    //    if (event.key.code == sf::Keyboard::Escape)
-    //    {
-    //        // Retourner au menu principal
-    //        m_sceneManager->setCurrentScene(0);
-    //    }
-    //}
+    if (event.type == sf::Event::KeyPressed)
+    {
+        if (event.key.code == sf::Keyboard::Escape)
+        {
+            m_sceneManager->setCurrentScene(2);
+        }
+    }
 
 
     m_game->handleInputs(event);
@@ -43,11 +41,11 @@ void GameScene::update(const float& deltaTime)
 void GameScene::render()
 {
 
-    m_renderWindow->clear(sf::Color::Black);
+    //m_renderWindow->clear();
 
 
 	m_game->render(*m_renderWindow);
     
 
-    m_game->renderBoundingBox(*m_renderWindow);
+    //m_game->renderBoundingBox(*m_renderWindow);
 }

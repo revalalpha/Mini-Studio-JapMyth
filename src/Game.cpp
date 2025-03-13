@@ -85,12 +85,12 @@ void Game::detectCollision()
 
 void Game::render(sf::RenderWindow& window)
 {
-    //window.clear();
+    window.clear();
 
     for (auto& gameObject : m_allGameObjects)
         gameObject->render(window);
 
-    //renderBoundingBox();
+    renderBoundingBox(window);
 
     window.display();
 }
