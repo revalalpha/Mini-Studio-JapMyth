@@ -24,6 +24,8 @@ set(SOURCES
     ${SOURCE_DIR}/TextureCache.cpp
     ${SOURCE_DIR}/TitleScene.cpp
     ${SOURCE_DIR}/Tree.cpp
+    ${SOURCE_DIR}/State.cpp
+    ${SOURCE_DIR}/StateMachine.cpp
 
 )
 
@@ -48,6 +50,8 @@ set(HEADERS
     ${HEADER_DIR}/TextureCache.h
     ${HEADER_DIR}/TitleScene.h
     ${HEADER_DIR}/Tree.h
+    ${HEADER_DIR}/State.h
+    ${HEADER_DIR}/StateMachine.h
 
 )
 

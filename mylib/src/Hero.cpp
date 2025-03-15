@@ -4,9 +4,22 @@ Hero::Hero(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game),
     m_healthComponent(100),
     m_movementComponent(70.f),
+    m_animationManager(m_sprite),
     m_stateComponent()
 {
+    defAnimation();
     m_movementComponent.move(position, 0.0f);
+}
+
+void Hero::defAnimation()
+{
+    m_animationManager.addAnimation("idle", { {0, 0, 64, 64}, {64, 0, 64, 64} }, 0.15f, true);
+    m_animationManager.addAnimation("run", { {0, 64, 64, 64}, {64, 64, 64, 64} }, 0.1f, true);
+    m_animationManager.addAnimation("attack", { {0, 128, 64, 64}, {64, 128, 64, 64} }, 0.1f, false);
+    m_animationManager.addAnimation("block", { {0, 0, 64, 64}, {64, 0, 64, 64} }, 0.15f, true);
+    m_animationManager.addAnimation("dodge", { {0, 64, 64, 64}, {64, 64, 64, 64} }, 0.1f, true);
+    m_animationManager.addAnimation("hurt", { {0, 128, 64, 64}, {64, 128, 64, 64} }, 0.1f, false);
+    m_animationManager.addAnimation("death", { {0, 128, 64, 64}, {64, 128, 64, 64} }, 0.1f, false);
 }
 
 void Hero::takeDamage(int damage)
@@ -44,6 +57,7 @@ void Hero::update(float deltaTime)
     m_healthComponent.update(deltaTime);
     m_movementComponent.update(deltaTime);
     m_stateComponent.update(deltaTime);
+    m_animationManager.update(deltaTime);
 }
 
 void Hero::render(sf::RenderWindow& window)

@@ -1,4 +1,4 @@
 .vs/
 build/*
-external/*
-cmake/*
+out/*
+.gitattributes
