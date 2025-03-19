@@ -53,7 +53,7 @@ public:
     virtual ~IGameObject();
 
     virtual void handleInputs(const sf::Event& event) = 0;
-    virtual void update(float deltaTime) = 0;
+    virtual void update(const float& deltaTime) = 0;
     virtual void render(sf::RenderWindow& window) = 0;
     virtual OBB getBoundingBox() const = 0;
     
@@ -72,6 +72,6 @@ public:
     IGameObjectCompound(IGameObjectContainer& owner);
 
     void handleInputs(const sf::Event& event) override;
-    void update(float deltaTime) override;
+    void update(const float& deltaTime) override;
     void render(sf::RenderWindow& window) override;
 };

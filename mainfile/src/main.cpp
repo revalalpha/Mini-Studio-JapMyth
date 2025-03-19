@@ -1,9 +1,15 @@
-#include "Game.h"
-#include "SceneManager.h"
-int main(int argc, char** argv)
+#include <iostream>
+
+#include "Engine.h"
+#include "PathFinder.h"
+
+int main(int argc, char* argv[])
 {
-    //Game game(argv[0]);
-    //game.run();
-    SceneManager test(1920, 1080,"boss", argv[0]);
-    test.exec();
+	PathFinder::initialize(argv[0]);
+	SceneManager engine(1920, 1080, "Test");
+	Engine game(engine);
+
+	game.exec();
+
+	return 0;
 }

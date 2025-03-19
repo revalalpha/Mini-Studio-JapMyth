@@ -1,44 +1,102 @@
 #pragma once
 
-#include "IGameObject.h"
-#include "HealthComponent.h"
-#include "MovementComponent.h"
-#include "StateComponent.h"
-#include "AnimationManager.h"
+#include <SFML/Graphics.hpp>
+#include <string>
+#include "HeroState.h"
+#include "StateManager.h"
+#include "MyComponent.h"
 
-namespace HeroStateNames
+enum class Direction
 {
-	enum class stateName
-	{
-		idle,
-		run,
-		attack,
-		block,
-		dodge,
-		hurt,
-		death
-	};
-}
+    Up,
+    Down,
+    Left,
+    Right
+};
 
-class Hero : public IGameObject
+enum class stateName
+{
+    idle,
+    run,
+    meleeAttack,
+    rangeAttack,
+    hurt,
+    death
+};
+
+class Hero : public ComponentGameObject
 {
 public:
-    Hero(IGameObjectContainer& game, const Vec2& position);
+    Hero(const std::string& name = "Hero");
+    ~Hero();
 
-    void defAnimation();
-    void takeDamage(int damage);
+    void initialize(const sf::Vector2f& position, float size, const sf::Color& color, float speed);
+    void update(const float& deltaTime) override;
+    void processInput(const sf::Event& event);
+
+    void handleInputs(const sf::Event& event) override;
+    OBB getBoundingBox() const override;
+    GameObjectType gameObjectType() override;
+
     bool isAlive() const;
-    void move(const Vec2& direction, float deltaTime);
-    Vec2 getPosition() const;
-    void setState(StateComponent::StateName newState);
-    StateComponent::StateName getCurrentState() const;
-    void update(float deltaTime) override;
-    void render(sf::RenderWindow& window) override;
+    bool isFacingLeft() const;
+    void takeDamage(int amount);
+    void move(const sf::Vector2f& offset);
+    void setFacingLeft(bool left);
+    void setDirection(Direction dir);
+    Direction getDirection() const;
+    sf::Sprite& getSprite();
+    void handleInput();
+
+    void attack();
+    void shoot();
+
+    stateName getCurrentState() const;
+    void setState(stateName newState);
+
+    StateManager& getStateManager();
+    float getSpeed() const;
+    const sf::Vector2f& getPosition() const;
+
+    bool isGoingLeft() const;
+    bool isGoingRight() const;
+    bool isGoingUp() const;
+    bool isGoingDown() const;
+    void updateDirection();
+
+    bool isAttacking() const;
+    bool isShooting() const;
+
+    void addComponent(std::shared_ptr<Composite> component);
+    void removeComponent(const std::string& name);
+    Composite* getComponent(const std::string& name);
+    const Composite* getComponent(const std::string& name) const;
+
 
 private:
-    HealthComponent m_healthComponent;
-    MovementComponent m_movementComponent;
-    StateComponent m_stateComponent;
+    Direction m_currentDirection;
+    bool m_isFacingLeft;
     sf::Sprite m_sprite;
-    AnimationManager m_animationManager;
+    int m_health;
+    int m_armor;
+    int m_strength;
+    stateName m_currentStateName;
+    float m_speed;
+    sf::Vector2f m_position;
+    StateManager m_stateManager;
+    std::unordered_map<std::string, std::shared_ptr<Composite>> m_components;
+
+    static constexpr int idleFrameCount = 2;
+    static constexpr int runFrameCount = 2;
+    static constexpr int shootFrameCount = 4;
+    static constexpr int attackFrameCount = 6;
+    static constexpr int hurtFrameCount = 1;
+    static constexpr int deathFrameCount = 18;
+
+    bool m_movingLeft = false;
+    bool m_movingRight = false;
+    bool m_movingUp = false;
+    bool m_movingDown = false;
+    bool m_attacking = false;
+    bool m_shooting = false;
 };

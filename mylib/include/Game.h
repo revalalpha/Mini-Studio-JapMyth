@@ -1,48 +1,23 @@
 #pragma once
 
-#include "TextureCache.h"
-#include "IGameObject.h"
+#include "Hero.h"
+#include "SceneBase.h"
 
-#include <SFML/Graphics.hpp>
-
-class IGameObject;
-
-#define private_members private
-#define private_function private
-#define private_friend_function(Cls) private
-
-class Game : public ::IGameObjectContainer
+class Game : public SceneBase
 {
 public:
-    sf::Font font;
+	Game(sf::RenderWindow* window, const float& framerate);
+	~Game() = default;
 
-    friend class IGameObject;
+	void setPlayer();
+	void setEnemy();
+	void initialize();
 
-    Game(sf::RenderWindow& window,const std::string& execPath);
-    ~Game();
+	void processInput(const sf::Event& event) override;
+	void update(const float& deltaTime) override;
+	void render() override;
 
-    void handleInputs(const sf::Event& event);
-
-    void update(const float& deltaTime);
-
-    void render(sf::RenderWindow& window);
-
-    //void run();
-
-    TextureCache& getTextureCache();
-    
-    virtual Game& getGame() override { return *this; }
-    Vec2 getWindowSize()const;
-    void renderBoundingBox(sf::RenderWindow& window);
-private_function:
-    void detectCollision();
-    void onCollision(IGameObject* go1, IGameObject* go2);
-    
-
-private_members:
-    //::sf::RenderWindow m_window;
-    TextureCache m_textureCache;
-    float m_Width;
-    float m_Height;
-    
+private:
+	std::shared_ptr<Hero> m_player;
+	std::vector<std::shared_ptr<ComponentGameObject>> m_gameObjects;
 };

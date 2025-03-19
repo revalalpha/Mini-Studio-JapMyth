@@ -1,138 +1,77 @@
 #include "Game.h"
+#include "Scrolling.h"
+#include "Enemy.h"
+#include "TextureManager.h"
 
-#include <array>
-#include <filesystem>
-
-#include "IGameObject.h"
-
-#include "PlayerShip.h"
-
-
-#include "Barrier.h"
-#include "Boss.h"
-
-
-
-Game::Game(sf::RenderWindow& window, const std::string& execPath)
-    :// m_window(sf::VideoMode(), "Boss!", sf::Style::Fullscreen)
-     m_textureCache(execPath)
-	, m_Width(window.getSize().x)
-	, m_Height(window.getSize().y)
+Game::Game(sf::RenderWindow* window, const float& framerate)
+    : SceneBase(window, framerate)
 {
-    //m_window.setFramerateLimit(60);
-    
-    font.loadFromFile(this->getTextureCache().getAbsoluteFilepath("arial.ttf"));
-    new Barrier(*this,
-        Vec2(m_Width / 2.0f, -15.0f),
-        Vec2(m_Width + 40.0f, 30.0f)
-    );
-
-    new Barrier(*this,
-        Vec2(m_Width / 2.0f, m_Height + 14.0f),
-        Vec2(m_Width + 40.0f, 30.0f)
-    );
-
-    new Barrier(*this,
-        Vec2(-14.0f, m_Height / 2.0f),
-        Vec2(30.0f, m_Height + 40.0f)
-    );
-
-    new Barrier(*this,
-        Vec2(m_Width + 15.0f, m_Height / 2.0f),
-        Vec2(30.0f, m_Height + 40.0f)
-    );
-    
-
-    new PlayerShip(*this, {( m_Width+300) - m_Width, m_Height / 2.0f });
-    new Boss(*this, { m_Width / 2.0f, m_Height / 2.0f });
+    initialize();
 }
 
-Game::~Game()
+void Game::setPlayer()
+{
+    TextureManager::getInstance().initialize();
+    m_player = std::make_shared<Hero>("Player");
+
+    m_player->getSprite().setPosition(500, 500);
+
+    m_player->setState(stateName::idle);
+
+    auto cameraTarget = std::make_shared<CameraTarget>(1.0f, true);
+    m_player->addComponent(cameraTarget);
+    m_gameObjects.push_back(m_player);
+}
+
+void Game::setEnemy()
 {
 }
 
-Vec2 Game::getWindowSize()const
+void Game::initialize()
 {
-    return { m_Width, m_Height };
+    Camera::getInstance().initialize(m_renderWindow);
+    Camera::getInstance().setZoom(1.f);
+    Camera::getInstance().setInterpolationSpeed(4.0f);
+
+    setPlayer();
+    /*setEnemy();*/
 }
 
-void Game::update(const float& delaTime)
+void Game::processInput(const sf::Event& event)
 {
-    _deferedAddObjects();
+    m_player->processInput(event);
+    m_player->handleInput();
 
-    detectCollision();
-    for (auto& gameObject : m_allGameObjects)
-        gameObject->update(delaTime);
-
-    _cleanObject();
+    SceneBase::processInput(event);
 }
 
-void Game::detectCollision()
+void Game::update(const float& deltaTime)
 {
-    for (size_t i = 0; i < m_allGameObjects.size(); ++i)
+    SceneBase::update(deltaTime);
+
+    for (auto& gameObject : m_gameObjects)
+        gameObject->update(deltaTime);
+
+    m_player->update(deltaTime);
+
+    auto playerRender = static_cast<SquareRenderer*>(m_player->getComposite("SquareRenderer"));
+    if (playerRender)
     {
-        for (size_t j = i + 1; j < m_allGameObjects.size(); ++j)
-        {
-            IGameObject* go1 = m_allGameObjects[i];
-            IGameObject* go2 = m_allGameObjects[j];
-
-            bool isIntersection = doesIntersect(go1->getBoundingBox(), go2->getBoundingBox());
-            if (isIntersection)
-                onCollision(go1, go2);
-        }
+        sf::Vector2f playerPos = playerRender->getPosition();
+        /*IEnemy::updateAllEnemyLOS(m_gameObjects, playerPos);*/
     }
+
+    Camera::getInstance().update(deltaTime);
 }
 
-void Game::render(sf::RenderWindow& window)
+void Game::render()
 {
-    window.clear();
+    Camera::getInstance().apply();
 
-    for (auto& gameObject : m_allGameObjects)
-        gameObject->render(window);
+    for (auto& gameObject : m_gameObjects)
+        gameObject->render(*m_renderWindow);
 
-    renderBoundingBox(window);
+    m_renderWindow->draw(m_player->getSprite());
 
-    window.display();
-}
-
-void Game::renderBoundingBox(sf::RenderWindow& window)
-{
-    for (const auto& go : m_allGameObjects)
-    {
-        sf::RectangleShape rectangle({ m_Width -350.f,m_Height - 250.f });
-        rectangle.setOutlineColor(sf::Color::Green);
-        rectangle.setOutlineThickness(5);
-        rectangle.setOrigin(rectangle.getSize().x / 2.f, rectangle.getSize().y / 2);
-        rectangle.setPosition({ m_Width /2.f, m_Height / 2.f });
-        rectangle.setFillColor(sf::Color::Transparent);
-    	
-        OBB obb = go->getBoundingBox();
-        sf::Color col = sf::Color::Green;
-
-        auto corners = obb.getCorners();
-
-        std::vector<sf::Vertex> lines;
-        lines.reserve(8);
-
-        for (size_t i = 0; i < corners.size(); ++i) {
-            size_t nextIdx = (i + 1) % corners.size();
-            lines.push_back(sf::Vertex{ {corners[i].x, corners[i].y}, col });
-            lines.push_back(sf::Vertex{ {corners[nextIdx].x, corners[nextIdx].y}, col });
-        }
-        window.draw(rectangle);
-        window.draw(&lines[0], lines.size(), sf::Lines);
-    }
-}
-
-
-void Game::handleInputs(const sf::Event& event)
-{
-
-    for (auto& go : m_allGameObjects)
-        go->handleInputs(event);
-}
-
-TextureCache& Game::getTextureCache()
-{
-    return m_textureCache;
+    SceneBase::render();
 }

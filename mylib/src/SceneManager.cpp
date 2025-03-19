@@ -1,9 +1,6 @@
 #include "SceneManager.h"
-#include "game.h"
+#include "Game.h"
 #include <iostream>
-#include "PauseScene.h"
-#include "GameScene.h"
-#include "TitleScene.h"
 
 enum SceneStat
 {
@@ -13,19 +10,21 @@ enum SceneStat
     , PAUSE
 };
 
-SceneManager::SceneManager(const int& width, const int& height, const std::string& title, const std::string& execPath)
+SceneManager::SceneManager(const int& width, const int& height, const std::string& title)
     : m_window(std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Fullscreen))
-    , m_currentScene(nullptr)
 {
-    m_scenes.push_back(std::make_unique<TitleScene>(m_window.get(), this, 30.f, execPath));
-    m_scenes.push_back(std::make_unique<GameScene>(m_window.get(), this, 60.f, execPath));
-    m_scenes.push_back(std::make_unique<PauseScene>(m_window.get(), this, 30.f, execPath));
-    m_currentScene = m_scenes.front().get();
+    m_rootScene = std::make_unique<SceneBase>(m_window.get(), 60.f, "Root");
+
+    auto gameScene = std::make_unique<Game>(m_window.get(), 60.f);
+
+    m_currentScene = gameScene.get();
+
+    m_rootScene->addChild(std::move(gameScene));
 }
 
-void SceneManager::push_back(std::unique_ptr<IScene> scene)
+void SceneManager::addScene(std::unique_ptr<SceneBase> scene)
 {
-    m_scenes.push_back(std::move(scene));
+    m_rootScene->addChild(std::move(scene));
 }
 
 sf::RenderWindow* SceneManager::getWindow()
@@ -33,14 +32,16 @@ sf::RenderWindow* SceneManager::getWindow()
     return m_window.get();
 }
 
-IScene* SceneManager::getCurrentScene()
+SceneBase* SceneManager::getCurrentScene()
 {
     return m_currentScene;
 }
 
-void SceneManager::setCurrentScene(const int& index)
+void SceneManager::setCurrentScene(const std::string& name)
 {
-    m_currentScene = m_scenes[index].get();
+    SceneBase* scene = m_rootScene->getChild(name);
+    if (scene)
+        m_currentScene = scene;
 }
 
 void SceneManager::processInput()
@@ -54,7 +55,15 @@ void SceneManager::processInput()
 
         if (event.type == sf::Event::KeyPressed)
         {
-            if (event.key.code == sf::Keyboard::P)
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+            {
+                if (m_currentScene->getName() == "Game")
+                    setCurrentScene("Pause");
+                else if (m_currentScene->getName() == "Pause")
+                    setCurrentScene("Game");
+            }
+
+            if (event.key.code == sf::Keyboard::Escape)
                 m_window->close();
         }
 
@@ -92,7 +101,7 @@ void SceneManager::exec()
         while (m_currentScene->getRefreshTime().asMilliseconds() > 0.0
             && lag >= m_currentScene->getRefreshTime().asMilliseconds())
         {
-            m_currentScene->update(1.f/60.f);
+            m_currentScene->update(m_currentScene->getRefreshTime().asSeconds());
             lag -= m_currentScene->getRefreshTime().asMilliseconds();
             ++counter;
         }

@@ -1,4 +1,4 @@
-#include "IGameObject.h"
+#include "GameObject.h"
 
 #include "Game.h"
 
@@ -89,7 +89,7 @@ void IGameObjectCompound::handleInputs(const sf::Event& event)
         gameObject->handleInputs(event);
 }
 
-void IGameObjectCompound::update(float deltaTime)
+void IGameObjectCompound::update(const float& deltaTime)
 {
     for (auto& gameObject : m_allGameObjects)
         gameObject->update(deltaTime);
@@ -104,4 +104,3 @@ IGameObjectCompound::IGameObjectCompound(IGameObjectContainer& owner)
     : IGameObject(owner)
 {
 }
-
