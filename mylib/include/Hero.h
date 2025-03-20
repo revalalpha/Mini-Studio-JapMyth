@@ -33,11 +33,9 @@ public:
 
     void initialize(const sf::Vector2f& position, float size, const sf::Color& color, float speed);
     void update(const float& deltaTime) override;
-    void processInput(const sf::Event& event);
+    void processInput(const sf::Event& event) override;
 
     void handleInputs(const sf::Event& event) override;
-    OBB getBoundingBox() const override;
-    GameObjectType gameObjectType() override;
 
     bool isAlive() const;
     bool isFacingLeft() const;

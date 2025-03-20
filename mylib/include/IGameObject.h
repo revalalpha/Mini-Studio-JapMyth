@@ -16,6 +16,7 @@ public:
 	virtual void removeChild(const std::string& name) = 0;
 	virtual IGameObject* getChild(const std::string& name) = 0;
 
+	virtual void handleInputs(const sf::Event& event) = 0;
 	virtual void setName(const std::string& name) = 0;
 	virtual std::string getName() const = 0;
 };

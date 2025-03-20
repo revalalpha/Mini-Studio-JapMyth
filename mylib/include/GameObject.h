@@ -12,6 +12,7 @@ public:
 	void processInput(const sf::Event& event) override;
 	void update(const float& deltaTime) override;
 	void render(sf::RenderWindow& window) override;
+	void handleInputs(const sf::Event& event) override;
 
 	void addChild(std::shared_ptr<IGameObject> child) override;
 	void removeChild(const std::string& name) override;

@@ -40,7 +40,7 @@ void Game::initialize()
 void Game::processInput(const sf::Event& event)
 {
     m_player->processInput(event);
-    m_player->handleInput();
+    m_player->handleInputs(event);
 
     SceneBase::processInput(event);
 }

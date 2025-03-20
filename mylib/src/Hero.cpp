@@ -56,6 +56,11 @@ void Hero::handleInput()
     m_sprite.move(direction * m_speed);
 }
 
+void Hero::handleInputs(const sf::Event&)
+{
+    handleInput();
+}
+
 bool Hero::isAlive() const
 {
     return m_health > 0;

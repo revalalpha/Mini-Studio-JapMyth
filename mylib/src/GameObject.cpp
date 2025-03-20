@@ -51,6 +51,12 @@ IGameObject* GameObject::getChild(const std::string& name)
 	return nullptr;
 }
 
+void GameObject::handleInputs(const sf::Event& event)
+{
+	for (auto& child : m_children)
+		child->handleInputs(event);
+}
+
 void GameObject::setName(const std::string& name)
 {
 	m_name = name;
