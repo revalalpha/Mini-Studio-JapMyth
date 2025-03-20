@@ -54,9 +54,10 @@ void Game::update(const float& deltaTime)
 
     m_player->update(deltaTime);
 
-    auto playerRender = static_cast<SquareRenderer*>(m_player->getComposite("SquareRenderer"));
-    if (playerRender)
-    {
+    SquareRenderer* playerRender = nullptr;
+
+    playerRender = dynamic_cast<SquareRenderer*>(m_player->getComponent("SquareRenderer"));
+    if (playerRender) {
         sf::Vector2f playerPos = playerRender->getPosition();
         /*IEnemy::updateAllEnemyLOS(m_gameObjects, playerPos);*/
     }

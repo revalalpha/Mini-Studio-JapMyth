@@ -7,6 +7,7 @@ set(SOURCES
     ${SOURCE_DIR}/Animation.cpp
     ${SOURCE_DIR}/Boss.cpp
     ${SOURCE_DIR}/BossBehavior.cpp
+    ${SOURCE_DIR}/CollisionHitbox.cpp
     ${SOURCE_DIR}/Engine.cpp
     ${SOURCE_DIR}/Enemy.cpp
     ${SOURCE_DIR}/EnemyBT.cpp
@@ -34,6 +35,7 @@ set(HEADERS
     ${HEADER_DIR}/Animation.h
     ${HEADER_DIR}/Boss.h
     ${HEADER_DIR}/BossBehavior.h
+    ${HEADER_DIR}/CollisionHitbox.h
     ${HEADER_DIR}/Engine.h
     ${HEADER_DIR}/Enemy.h
     ${HEADER_DIR}/EnemyBT.h

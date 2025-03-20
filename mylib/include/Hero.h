@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "HeroState.h"
+#include "CollisionHitbox.h"
 #include "StateFactory.h"
 #include "StateManager.h"
 #include "MyComponent.h"
@@ -34,7 +35,7 @@ public:
     void initialize(const sf::Vector2f& position, float size, const sf::Color& color, float speed);
     void update(const float& deltaTime) override;
     void processInput(const sf::Event& event) override;
-
+    void render(sf::RenderWindow& window);
     void handleInputs(const sf::Event& event) override;
 
     bool isAlive() const;
@@ -70,10 +71,20 @@ public:
     void removeComponent(const std::string& name);
     Composite* getComponent(const std::string& name);
     const Composite* getComponent(const std::string& name) const;
+    ComponentGameObject* getComposite(const std::string& name);
+    void setCategory(const std::string& category);
+    void addTag(const std::string& tag);
+    bool hasTag(const std::string& tag) const;
+    void knockBack(const sf::Vector2f& pos, float force);
+
+    void updateComponents(const float& deltaTime);
+    void updateAnimationPosition();
+    void updateAnimation(stateName newState);
 
 
 private:
     Direction m_currentDirection;
+    float m_knockBackDuration;
     bool m_isFacingLeft;
     sf::Sprite m_sprite;
     int m_health;
@@ -83,6 +94,7 @@ private:
     float m_speed;
     sf::Vector2f m_position;
     StateManager m_stateManager;
+    sf::Vector2f m_knockBack;
     std::unordered_map<std::string, std::shared_ptr<Composite>> m_components;
 
     static constexpr int idleFrameCount = 2;
