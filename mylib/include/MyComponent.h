@@ -5,19 +5,18 @@
 #include "GameObject.h"
 #include "SceneBase.h"
 
-class ComponentGameObject : public IGameObject
+class ComponentGameObject : public GameObject
 {
 public:
 	ComponentGameObject(const std::string& name = "ComponentGameObject");
 	virtual ~ComponentGameObject() = default;
 
-	void processInput(const sf::Event& event);
-	void update(const float& deltaTime);
+	void processInput(const sf::Event& event) override;
+	void update(const float& deltaTime) override;
 	void render(sf::RenderWindow& window) override;
 
 	void addComposite(std::shared_ptr<Composite> component);
 	Composite* getComposite(const std::string& name);
-	const Composite* getComposite(const std::string& name) const;
 	void removeComposite(const std::string& name);
 
 private:

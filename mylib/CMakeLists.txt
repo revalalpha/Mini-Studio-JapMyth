@@ -12,6 +12,7 @@ set(SOURCES
     ${SOURCE_DIR}/EnemyBT.cpp
     ${SOURCE_DIR}/Game.cpp
     ${SOURCE_DIR}/GameObject.cpp
+    ${SOURCE_DIR}/IGameObject.cpp
     ${SOURCE_DIR}/Hero.cpp
     ${SOURCE_DIR}/HeroState.cpp
     ${SOURCE_DIR}/MyComposite.cpp
@@ -38,6 +39,7 @@ set(HEADERS
     ${HEADER_DIR}/EnemyBT.h
     ${HEADER_DIR}/Game.h
     ${HEADER_DIR}/GameObject.h
+    ${HEADER_DIR}/IGameObject.h
     ${HEADER_DIR}/Hero.h
     ${HEADER_DIR}/HeroState.h
     ${HEADER_DIR}/MyComposite.h

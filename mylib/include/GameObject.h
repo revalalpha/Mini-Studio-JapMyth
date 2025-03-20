@@ -1,77 +1,36 @@
 #pragma once
+#include "IGameObject.h"
+#include <algorithm>
+#include <unordered_set>
 
-#include "MyMath.h"
-
-#include <vector>
-
-namespace sf { class RenderWindow; }
-namespace sf { class Event; }
-
-class Game;
-
-enum GameObjectType
-{
-
-	  ENEMY_TYPE = 0
-	, PLAYERprojectile_TYPE = 1
-	, ENEMYprojectile_TYPE = 2
-    , PLAYERmelee_TYPE = 3
-    , ENEMYmelee_TYPE = 4
-	, BARRIER_TYPE = 5
-	, PLAYERSHIP_TYPE = 6
-	, INVICIBLE_TYPE = 7
-    , ENEMYKick_TYPE=8
-
-};
-
-class IGameObject;
-
-class IGameObjectContainer
+class GameObject : public IGameObject
 {
 public:
-    void _addObject(IGameObject*);
-    void _removeObject(IGameObject*);
-    void _toBeRemoveObject(IGameObject*);
-    void _deferedAddObject(IGameObject*);
-    void _deferedAddObjects();
-    void _cleanObject();
-    std::vector<IGameObject*> getAllGameOjects() const;
-    ~IGameObjectContainer();
+	GameObject(const std::string& name = "GameObject");
+	virtual ~GameObject() = default;
 
-    virtual Game& getGame() = 0;
+	void processInput(const sf::Event& event) override;
+	void update(const float& deltaTime) override;
+	void render(sf::RenderWindow& window) override;
+
+	void addChild(std::shared_ptr<IGameObject> child) override;
+	void removeChild(const std::string& name) override;
+	IGameObject* getChild(const std::string& name) override;
+
+	void setName(const std::string& name) override;
+	std::string getName() const override;
+
+	void setCategory(const std::string& category);
+	std::string getCategory() const;
+
+	void addTag(const std::string& tag);
+	void removeTag(const std::string& tag);
+	bool hasTag(const std::string& tag) const;
+	const std::unordered_set<std::string>& getTags() const;
 
 protected:
-    std::vector<IGameObject*> m_allGameObjects;
-    std::vector<IGameObject*> m_toBeRemovedGameObjects;
-    std::vector<IGameObject*> m_toBeAddedGameObjects;
-};
-
-class IGameObject
-{
-public:
-    IGameObject(IGameObjectContainer& owner);
-    virtual ~IGameObject();
-
-    virtual void handleInputs(const sf::Event& event) = 0;
-    virtual void update(const float& deltaTime) = 0;
-    virtual void render(sf::RenderWindow& window) = 0;
-    virtual OBB getBoundingBox() const = 0;
-    
-    virtual GameObjectType gameObjectType() = 0;
-    void destroy();
-    IGameObjectContainer& getOwner() { return m_owner; }
-    const IGameObjectContainer& getOwner() const { return m_owner; }
-
-protected:
-    IGameObjectContainer& m_owner;
-};
-
-class IGameObjectCompound : public IGameObject, public IGameObjectContainer
-{
-public:
-    IGameObjectCompound(IGameObjectContainer& owner);
-
-    void handleInputs(const sf::Event& event) override;
-    void update(const float& deltaTime) override;
-    void render(sf::RenderWindow& window) override;
+	std::string m_name;
+	std::string m_category;
+	std::unordered_set<std::string> m_tags;
+	std::vector<std::shared_ptr<IGameObject>> m_children;
 };

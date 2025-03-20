@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include "HeroState.h"
+#include "StateFactory.h"
 #include "StateManager.h"
 #include "MyComponent.h"
 

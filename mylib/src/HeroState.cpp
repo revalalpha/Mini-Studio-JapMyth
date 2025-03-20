@@ -1,5 +1,4 @@
 #include "HeroState.h"
-#include "State.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 

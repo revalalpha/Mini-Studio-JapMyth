@@ -1,20 +1,19 @@
 #include "Hero.h"
-#include "StateFactory.h"
 
 Hero::Hero(const std::string& name) : m_stateManager(this)
 {
-    /*m_stateManager.registerState("Idle", [this] { return StateFactory::createState("Idle", this); });
-    m_stateManager.registerState("Run", [this] { return StateFactory::createState("Run", this); });
-    m_stateManager.registerState("Attack", [this] { return StateFactory::createState("Attack", this); });
-    m_stateManager.registerState("Shoot", [this] { return StateFactory::createState("Shoot", this); });
-    m_stateManager.registerState("Hurt", [this] { return StateFactory::createState("Hurt", this); });
-    m_stateManager.registerState("Death", [this] { return StateFactory::createState("Death", this); });
+    m_stateManager.registerState("Idle", [this](Hero* hero) { return StateFactory::createState("Idle", this); });
+    m_stateManager.registerState("Run", [this](Hero* hero) { return StateFactory::createState("Run", this); });
+    m_stateManager.registerState("Attack", [this](Hero* hero) { return StateFactory::createState("Attack", this); });
+    m_stateManager.registerState("Shoot", [this](Hero* hero) { return StateFactory::createState("Shoot", this); });
+    m_stateManager.registerState("Hurt", [this](Hero* hero) { return StateFactory::createState("Hurt", this); });
+    m_stateManager.registerState("Death", [this](Hero* hero) { return StateFactory::createState("Death", this); });
 
     m_stateManager.changeState("Idle");
 
     m_health = 100;
     m_isFacingLeft = false;
-    m_currentStateName = stateName::idle;*/
+    m_currentStateName = stateName::idle;
 }
 
 Hero::~Hero() = default;

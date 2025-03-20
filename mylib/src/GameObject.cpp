@@ -1,106 +1,92 @@
 #include "GameObject.h"
 
-#include "Game.h"
-
-
-IGameObjectContainer::~IGameObjectContainer()
+GameObject::GameObject(const std::string& name)
+	: m_name(name)
 {
-    auto allGameObjects = m_allGameObjects;
-    for (auto& gameObject : allGameObjects)
-        delete gameObject;
 }
 
-void IGameObjectContainer::_addObject(IGameObject* go)
+void GameObject::processInput(const sf::Event& event)
 {
-    m_toBeAddedGameObjects.push_back(go);
+	for (auto& child : m_children)
+		child->processInput(event);
 }
 
-struct RemoveNonExisitingGameObject : public std::runtime_error
+void GameObject::update(const float& deltaTime)
 {
-    RemoveNonExisitingGameObject() : std::runtime_error("Try to remove non existing Game Object.")
-    {
-    }
-};
-
-void IGameObjectContainer::_removeObject(IGameObject* go)
-{
-    auto it = std::find(m_allGameObjects.begin(), m_allGameObjects.end(), go);
-    if (it == m_allGameObjects.end()) // No elem found.
-        throw RemoveNonExisitingGameObject();
-
-    m_allGameObjects.erase(it);
+	for (auto& child : m_children)
+		child->update(deltaTime);
 }
 
-void IGameObjectContainer::_toBeRemoveObject(IGameObject* go)
+void GameObject::render(sf::RenderWindow& window)
 {
-    auto it = std::find(m_toBeRemovedGameObjects.begin(), m_toBeRemovedGameObjects.end(), go);
-
-    if (it != m_toBeRemovedGameObjects.end())
-        return;
-
-    m_toBeRemovedGameObjects.push_back(go);
+	for (auto& child : m_children)
+		child->render(window);
 }
 
-void IGameObjectContainer::_cleanObject()
+void GameObject::addChild(std::shared_ptr<IGameObject> child)
 {
-    for (auto& go : m_toBeRemovedGameObjects)
-        delete go;
-
-    m_toBeRemovedGameObjects.clear();
+	m_children.push_back(child);
 }
 
-void IGameObjectContainer::_deferedAddObject(IGameObject* go)
+void GameObject::removeChild(const std::string& name)
 {
-    m_allGameObjects.push_back(go);
+	auto it = std::find_if(m_children.begin(), m_children.end(),
+		[&name](const std::shared_ptr<IGameObject>& obj)
+		{
+			return obj->getName() == name;
+		});
+
+	if (it != m_children.end())
+		m_children.erase(it);
 }
 
-void IGameObjectContainer::_deferedAddObjects()
+IGameObject* GameObject::getChild(const std::string& name)
 {
-    for (auto& go : m_toBeAddedGameObjects)
-        _deferedAddObject(go);
+	for (auto& child : m_children)
+	{
+		if (child->getName() == name)
+			return child.get();
+	}
 
-    m_toBeAddedGameObjects.clear();
+	return nullptr;
 }
 
-std::vector<IGameObject*> IGameObjectContainer::getAllGameOjects() const
+void GameObject::setName(const std::string& name)
 {
-    return m_allGameObjects;
+	m_name = name;
 }
 
-
-IGameObject::IGameObject(IGameObjectContainer& owner) : m_owner(owner)
+std::string GameObject::getName() const
 {
-    m_owner._addObject(this);
+	return m_name;
 }
 
-IGameObject::~IGameObject()
+void GameObject::setCategory(const std::string& category)
 {
-    m_owner._removeObject(this);
+	m_category = category;
 }
 
-void IGameObject::destroy()
+std::string GameObject::getCategory() const
 {
-    m_owner._toBeRemoveObject(this);
+	return m_category;
 }
 
-void IGameObjectCompound::handleInputs(const sf::Event& event)
+void GameObject::addTag(const std::string& tag)
 {
-    for (auto& gameObject : m_allGameObjects)
-        gameObject->handleInputs(event);
+	m_tags.insert(tag);
 }
 
-void IGameObjectCompound::update(const float& deltaTime)
+void GameObject::removeTag(const std::string& tag)
 {
-    for (auto& gameObject : m_allGameObjects)
-        gameObject->update(deltaTime);
+	m_tags.erase(tag);
 }
 
-void IGameObjectCompound::render(sf::RenderWindow& window)
+bool GameObject::hasTag(const std::string& tag) const
 {
-    for (auto& gameObject : m_allGameObjects)
-        gameObject->render(window);
+	return m_tags.find(tag) != m_tags.end();
 }
-IGameObjectCompound::IGameObjectCompound(IGameObjectContainer& owner)
-    : IGameObject(owner)
+
+const std::unordered_set<std::string>& GameObject::getTags() const
 {
+	return m_tags;
 }
