@@ -118,10 +118,10 @@ void PlayerShip::update(float deltaTime)
 
     }
     sf::Vector2i mousePos = sf::Mouse::getPosition();
-    float angle = atan2(mousePos.y - m_position.y, mousePos.x - m_position.x);
+    float angle = atan2(m_position.y- mousePos.y,  m_position.x- mousePos.x );
     float rotation = angle * 180 / 3.14159f;
     std::cout << rotation << std::endl;
-
+    
     //sf::Vector2f t(m_owner.getGame().getMouse());
     //m_mouseAngle = atan2(m_owner.getGame().getMouse().y - m_position.y, m_owner.getGame().getMouse().x - m_position.x);
     //float i = (m_mouseAngle / 3.14159265f * 180.f);
