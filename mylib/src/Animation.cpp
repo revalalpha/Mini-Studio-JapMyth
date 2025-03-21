@@ -158,12 +158,12 @@ void AnimationComponent::playAnimation(const std::string& name)
     m_currentAnimation = name;
     m_animations[name].reset();
 
-    sf::Texture* texture = TextureManager::getInstance().getTexture(m_animations[name].m_textureName);
+    /*sf::Texture* texture = getM.getTexture(m_animations[name].m_textureName);
     if (texture)
     {
         m_sprite.setTexture(*texture);
         m_sprite.setTextureRect(m_animations[name].getCurrentFrameRect());
-    }
+    }*/
 
     m_sprite.setPosition(currentPosition);
     m_sprite.setScale(currentScale);

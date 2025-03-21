@@ -25,9 +25,20 @@ void PathFinder::initialize(const std::string& executablePath)
     s_resourceDirectory = projectRoot / "resources";
 }
 
+//std::string PathFinder::getResourcePath(const std::string& relativePath)
+//{
+//    std::string fullPath = (PathFinder::s_resourceDirectory / relativePath).string();
+//    std::cout << "Loading resource: " << fullPath << std::endl; // Debug
+//    return fullPath;
+//}
+
 std::string PathFinder::getResourcePath(const std::string& relativePath)
 {
-    std::string fullPath = (PathFinder::s_resourceDirectory / relativePath).string();
-    std::cout << "Loading resource: " << fullPath << std::endl; // Debug
+    std::string fullPath = "C:/Src/Mini-Studio-JapMyth/resources/" + relativePath;
+
+    // Remplace tous les '\' par '/'
+    std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
+
+    std::cout << "PathFinder::getResourcePath - Chemin corrigé: " << fullPath << std::endl;
     return fullPath;
 }

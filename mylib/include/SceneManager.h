@@ -4,10 +4,12 @@
 
 #include "sceneBase.h"
 
+class TextureCache;
+
 class SceneManager
 {
 public:
-	SceneManager(const int& width, const int& height, const std::string& title);
+	SceneManager(const int& width, const int& height, const std::string& title, const std::string& filepath);
 
 	void addScene(std::unique_ptr<SceneBase> scene);
 	sf::RenderWindow* getWindow();
@@ -15,9 +17,11 @@ public:
 	void setCurrentScene(const std::string& name);
 	void processInput();
 	void exec();
+	TextureCache* getTextureCache();
 
 private:
 	std::unique_ptr<sf::RenderWindow> m_window;
 	std::unique_ptr<SceneBase> m_rootScene;
 	SceneBase* m_currentScene;
+	TextureCache* m_texture_cache;
 };

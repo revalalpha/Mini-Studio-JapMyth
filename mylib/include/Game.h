@@ -6,7 +6,7 @@
 class Game : public SceneBase
 {
 public:
-	Game(sf::RenderWindow* window, const float& framerate);
+	Game(sf::RenderWindow* window, const float& framerate, TextureCache* texture);
 	~Game() = default;
 
 	void setPlayer();
@@ -19,5 +19,6 @@ public:
 
 private:
 	std::shared_ptr<Hero> m_player;
+	sf::Sprite m_mapSprite;
 	std::vector<std::shared_ptr<ComponentGameObject>> m_gameObjects;
 };

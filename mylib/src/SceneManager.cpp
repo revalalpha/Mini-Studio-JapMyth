@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 #include "Game.h"
 #include <iostream>
+#include "TextureManager.h"
 
 enum SceneStat
 {
@@ -10,12 +11,12 @@ enum SceneStat
     , PAUSE
 };
 
-SceneManager::SceneManager(const int& width, const int& height, const std::string& title)
-    : m_window(std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Fullscreen))
+SceneManager::SceneManager(const int& width, const int& height, const std::string& title, const std::string& filepath)
+    : m_window(std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Fullscreen)), m_texture_cache(new TextureCache(filepath))
 {
-    m_rootScene = std::make_unique<SceneBase>(m_window.get(), 60.f, "Root");
+    m_rootScene = std::make_unique<SceneBase>(m_window.get(), 60.f, getTextureCache(),"Root");
 
-    auto gameScene = std::make_unique<Game>(m_window.get(), 60.f);
+    auto gameScene = std::make_unique<Game>(m_window.get(), 60.f, getTextureCache());
 
     m_currentScene = gameScene.get();
 
@@ -109,4 +110,9 @@ void SceneManager::exec()
         m_currentScene->render();
         m_window->display();
     }
+}
+
+TextureCache* SceneManager::getTextureCache()
+{
+    return m_texture_cache;
 }

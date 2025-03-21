@@ -4,10 +4,12 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Window.hpp>
 
+class TextureCache;
+
 class SceneBase
 {
 public:
-    SceneBase(sf::RenderWindow* window, const float& framerate, const std::string& name = "Scene");
+    SceneBase(sf::RenderWindow* window, const float& framerate, TextureCache* textureCache, const std::string& name = "Scene");
     virtual ~SceneBase() = default;
 
     virtual void processInput(const sf::Event& event);
@@ -23,11 +25,15 @@ public:
     void setName(const std::string& name);
     static SceneBase* getCurrentScene();
 
+
+    TextureCache* getTexture();
+
 protected:
     sf::RenderWindow* m_renderWindow;
     sf::Time m_refreshTime;
     std::string m_name;
     std::vector<std::unique_ptr<SceneBase>> m_children;
+    TextureCache* m_texture_cache;
 
 private:
     static SceneBase* m_currentScene;

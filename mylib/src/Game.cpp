@@ -2,16 +2,16 @@
 #include "Scrolling.h"
 #include "Enemy.h"
 #include "TextureManager.h"
+#include <iostream>
 
-Game::Game(sf::RenderWindow* window, const float& framerate)
-    : SceneBase(window, framerate)
+Game::Game(sf::RenderWindow* window, const float& framerate, TextureCache* texture)
+    : SceneBase(window, framerate, texture)
 {
     initialize();
 }
 
 void Game::setPlayer()
 {
-    TextureManager::getInstance().initialize();
     m_player = std::make_shared<Hero>("Player");
 
     m_player->getSprite().setPosition(500, 500);
@@ -23,19 +23,32 @@ void Game::setPlayer()
     m_gameObjects.push_back(m_player);
 }
 
+//void Game::setPlayer()
+//{
+//    std::string heroTexture = "Hero"; // Nom exact donné dans loadTexture()
+//
+//    if (!TextureManager::getInstance().hasTexture(heroTexture))
+//    {
+//        std::cerr << "Erreur : La texture '" << heroTexture << "' n'a pas été chargée avant la création du joueur !" << std::endl;
+//    }
+//}
+
 void Game::setEnemy()
 {
 }
 
 void Game::initialize()
 {
+    sf::Texture& mapTexture = m_texture_cache->GetTexture("map\\Map.png");
+	m_mapSprite.setTexture(mapTexture);
+	m_mapSprite.setPosition(0, 0);
+    setPlayer();
+
     Camera::getInstance().initialize(m_renderWindow);
     Camera::getInstance().setZoom(1.f);
     Camera::getInstance().setInterpolationSpeed(4.0f);
-
-    setPlayer();
-    /*setEnemy();*/
 }
+
 
 void Game::processInput(const sf::Event& event)
 {
@@ -68,6 +81,8 @@ void Game::update(const float& deltaTime)
 void Game::render()
 {
     Camera::getInstance().apply();
+
+    m_renderWindow->draw(m_mapSprite);
 
     for (auto& gameObject : m_gameObjects)
         gameObject->render(*m_renderWindow);
