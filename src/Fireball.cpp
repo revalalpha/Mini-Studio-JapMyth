@@ -1,19 +1,25 @@
 #include "Fireball.h"
 
 #include "Game.h"
+#include "PlayerShip.h"
+#include "Samurai.h"
 
 Vec2 getFireballSize()
 {
     return { 16.f, 16.f };
 }
 
-Fireball::Fireball(IGameObjectContainer& game, const Vec2& position, const Vec2& velocity,const GameObjectType& type)
+Fireball::Fireball(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity,const GameObjectType& type,const std::string& textureFile,Vec2 Scale)
     : IGameObject(game)
+	, m_owner(owner)
     , m_position(position)
     , m_velocity(velocity)
 	, m_type(type)
+	, m_angle(getOwnerAngle())
 {
-    m_sprite.setTexture(getOwner().getGame().getTextureCache().getTexture("point.png"));
+    m_sprite.setTexture(getOwner().getGame().getTextureCache().getTexture(textureFile));
+    m_sprite.setScale({Scale.x,Scale.y});
+    
 }
 
 void Fireball::handleInputs(const sf::Event& event)
@@ -25,11 +31,13 @@ void Fireball::update(float deltaTime)
 {
     float dt = 1.f / 60.f;
     m_position += m_velocity * dt;
+    
 }
 
 void Fireball::render(sf::RenderWindow& window)
 {
-    m_sprite.setOrigin(getFireballSize().x / 2.f, getFireballSize().y / 2.f);
+    m_sprite.setRotation(m_angle / 3.14159265f * 180.f);
+    m_sprite.setOrigin(m_sprite.getLocalBounds().getSize().x / 2.f, m_sprite.getLocalBounds().getSize().y / 2.f);
     m_sprite.setPosition(m_position.x, m_position.y);
     window.draw(m_sprite);
 }
@@ -53,4 +61,38 @@ OBB Fireball::getBoundingBox() const
 GameObjectType Fireball::gameObjectType()
 {
     return m_type;
+}
+
+
+
+float Fireball::getOwnerAngle() const
+{
+    if (!m_owner)
+        return 0.f;
+
+    switch (m_owner->gameObjectType())
+    {
+    case PLAYERSHIP_TYPE:
+        return static_cast<PlayerShip*>(m_owner)->getAngle();
+    case ENEMY_TYPE:
+        return static_cast<Samurai*>(m_owner)->getAngle();
+    default:
+        return 0.f;
+    }
+}
+
+bool Fireball::IsOwnerDead() const
+{
+    if (!m_owner)
+        return true;
+
+    switch (m_owner->gameObjectType())
+    {
+    case PLAYERSHIP_TYPE:
+        return static_cast<PlayerShip*>(m_owner)->getHP() <= 0;
+    case ENEMY_TYPE:
+        return static_cast<Samurai*>(m_owner)->getHP() <= 0;
+    default:
+        return true;
+    }
 }

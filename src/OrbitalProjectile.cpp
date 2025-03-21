@@ -3,7 +3,7 @@
 
 #include "Game.h"
 #include "PlayerShip.h"
-#include "Boss.h"
+#include "Samurai.h"
 
 
 #define PI  3.14159265f
@@ -153,7 +153,7 @@ Vec2 OrbitalProjectile::getOwnerPosition() const
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getPositon();
     case ENEMY_TYPE:
-        return static_cast<Boss*>(m_owner)->getPosition();
+        return static_cast<Samurai*>(m_owner)->getPosition();
     default:
         OBB ownersOBB = m_owner->getBoundingBox();
         return ownersOBB.center;
@@ -170,7 +170,7 @@ bool OrbitalProjectile::IsOwnerDead() const
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getHP() <=0;
     case ENEMY_TYPE:
-        return static_cast<Boss*>(m_owner)->getHP() <= 0;
+        return static_cast<Samurai*>(m_owner)->getHP() <= 0;
     default:
         return true;
     }

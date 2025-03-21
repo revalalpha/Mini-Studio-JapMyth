@@ -17,6 +17,7 @@ SceneManager::SceneManager(const int& width, const int& height, const std::strin
     : m_window(std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Fullscreen))
     , m_currentScene(nullptr)
 {
+    
     m_scenes.push_back(std::make_unique<TitleScene>(m_window.get(), this, 30.f, execPath));
     m_scenes.push_back(std::make_unique<GameScene>(m_window.get(), this, 60.f, execPath));
     m_scenes.push_back(std::make_unique<PauseScene>(m_window.get(), this, 30.f, execPath));
@@ -54,18 +55,6 @@ void SceneManager::processInput()
 
         if (event.type == sf::Event::KeyPressed)
         {
-            //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-            //{
-            //    if (m_currentScene != m_scenes.front().get())
-            //    {
-            //        if (m_currentScene == m_scenes[GAME].get())
-            //            m_currentScene = m_scenes[PAUSE].get();
-            //        else if (m_currentScene == m_scenes[PAUSE].get())
-            //            m_currentScene = m_scenes[GAME].get();
-            //        else if (m_currentScene == m_scenes[CREDIT].get())
-            //            m_currentScene = m_scenes[MENU].get();
-            //    }
-            //}
 
             if (event.key.code == sf::Keyboard::P)
                 m_window->close();
@@ -77,6 +66,9 @@ void SceneManager::processInput()
 
 void SceneManager::exec()
 {
+
+
+
     // We start the clock
     const sf::Clock clock;
     const sf::Clock spawnClock;
@@ -105,7 +97,7 @@ void SceneManager::exec()
         while (m_currentScene->getRefreshTime().asMilliseconds() > 0.0
             && lag >= m_currentScene->getRefreshTime().asMilliseconds())
         {
-            m_currentScene->update(1.f/60.f);
+            m_currentScene->update(elapsed);
             lag -= m_currentScene->getRefreshTime().asMilliseconds();
             ++counter;
         }

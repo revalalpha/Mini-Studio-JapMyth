@@ -9,7 +9,7 @@ class IGameObjectContainer;
 class Fireball : public IGameObject
 {
 public:
-    Fireball(IGameObjectContainer& game, const Vec2& position, const Vec2& velocity, const GameObjectType& type);
+    Fireball(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity, const GameObjectType& type, const std::string& textureFile, Vec2 Scale={1.f,1.f});
 
     void handleInputs(const sf::Event& event) override;
     void update(float deltaTime) override;
@@ -17,12 +17,19 @@ public:
     OBB getBoundingBox() const override;
     GameObjectType gameObjectType() override;
 
+
+    
 private:
     sf::Sprite m_sprite;
-
+    IGameObject* m_owner;
     Vec2 m_position;
     Vec2 m_velocity;
+    float m_angle;
     GameObjectType m_type;
+
+    float getOwnerAngle() const;
+
+    bool IsOwnerDead() const;
 };
 
 

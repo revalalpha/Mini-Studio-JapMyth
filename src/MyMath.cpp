@@ -23,7 +23,12 @@ bool Vec2::operator==(const Vec2& op2)
         return false;
     return true;
 }
-
+bool Vec2::operator!=(const Vec2& op2)
+{
+    if (x != op2.x || y != op2.y)
+        return true;
+    return false;
+}
 float Vec2::getLength() const
 {
     return std::sqrt(x * x + y * y);

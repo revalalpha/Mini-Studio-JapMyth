@@ -27,9 +27,9 @@ public:
 
     void render(sf::RenderWindow& window);
 
-    //void run();
-
     TextureCache& getTextureCache();
+
+    sf::Vector2f getMouse();
     
     virtual Game& getGame() override { return *this; }
     Vec2 getWindowSize()const;
@@ -40,9 +40,10 @@ private_function:
     
 
 private_members:
-    //::sf::RenderWindow m_window;
+    ::sf::RenderWindow* m_window;
     TextureCache m_textureCache;
     float m_Width;
     float m_Height;
+    sf::Vector2f worldPos;
     
 };

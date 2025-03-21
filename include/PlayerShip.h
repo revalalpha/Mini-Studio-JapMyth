@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Animation.h"
 #include "IGameObject.h"
 
 #include <SFML/Graphics.hpp>
@@ -25,7 +25,8 @@ public:
     bool isKick;
 private:
     sf::Sprite m_sprite;
-
+    SheetToBeAnimated PlayerSheet;
+    sf::View m_view;
     //  Inputs
     bool m_isAccelerating;
     bool m_isTurningLeft;
@@ -39,6 +40,7 @@ private:
 
     //  Physics
     float m_angle;
+    float m_mouseAngle;
     Vec2 m_position;
     Vec2 m_velocity;
     Vec2 acceleration;

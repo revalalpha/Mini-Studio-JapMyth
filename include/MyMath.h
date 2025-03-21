@@ -15,6 +15,7 @@ struct Vec2
     Vec2& operator+=(const Vec2& op2);
     Vec2& operator-=(const Vec2& op2);
     bool operator==(const Vec2& op2);
+    bool operator!=(const Vec2& op2);
     float getLength() const;
 };
 

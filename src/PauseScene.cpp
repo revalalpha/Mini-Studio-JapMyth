@@ -81,11 +81,20 @@ void PauseScene::processInput(const sf::Event& event)
                 m_renderWindow->close();
         }
     }
+    if (event.type == sf::Event::KeyPressed)
+    {
+        if (event.key.code == sf::Keyboard::Escape)
+        {
+            m_sceneManager->setCurrentScene(1);
+        }
+    }
 }
 
 void PauseScene::update(const float& deltaTime)
 {
-
+    
+    
+    m_renderWindow->setView(sf::View(m_renderWindow->getDefaultView()));
 }
 
 void PauseScene::render()

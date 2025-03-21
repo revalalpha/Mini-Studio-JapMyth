@@ -9,7 +9,7 @@
 
 
 #include "Barrier.h"
-#include "Boss.h"
+#include "Samurai.h"
 
 
 
@@ -20,7 +20,11 @@ Game::Game(sf::RenderWindow& window, const std::string& execPath)
 	, m_Height(window.getSize().y)
 {
     //m_window.setFramerateLimit(60);
-    
+
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+
+    worldPos = window.mapPixelToCoords(pixelPos);
+
     font.loadFromFile(this->getTextureCache().getAbsoluteFilepath("arial.ttf"));
     new Barrier(*this,
         Vec2(m_Width / 2.0f, -15.0f),
@@ -44,7 +48,7 @@ Game::Game(sf::RenderWindow& window, const std::string& execPath)
     
 
     new PlayerShip(*this, {( m_Width+300) - m_Width, m_Height / 2.0f });
-    new Boss(*this, { m_Width / 2.0f, m_Height / 2.0f });
+    new Samurai(*this, { m_Width / 2.0f, m_Height / 2.0f });
 }
 
 Game::~Game()
@@ -62,7 +66,7 @@ void Game::update(const float& delaTime)
 
     detectCollision();
     for (auto& gameObject : m_allGameObjects)
-        gameObject->update(delaTime);
+        gameObject->update(1.f/ 60.f);
 
     _cleanObject();
 }
@@ -92,7 +96,7 @@ void Game::render(sf::RenderWindow& window)
 
     renderBoundingBox(window);
 
-    window.display();
+    //window.display();
 }
 
 void Game::renderBoundingBox(sf::RenderWindow& window)
@@ -135,4 +139,11 @@ void Game::handleInputs(const sf::Event& event)
 TextureCache& Game::getTextureCache()
 {
     return m_textureCache;
+}
+
+
+sf::Vector2f Game::getMouse()
+{
+    return worldPos;
+
 }

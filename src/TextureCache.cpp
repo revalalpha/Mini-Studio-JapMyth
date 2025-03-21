@@ -13,6 +13,7 @@ TextureCache::~TextureCache()
         delete textureInfo.texture;
 }
 
+
 std::string TextureCache::getAbsoluteFilepath(const std::string& filename)
 {
     std::filesystem::path execFilePath(m_execFilePath);

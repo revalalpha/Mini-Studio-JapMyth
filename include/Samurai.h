@@ -3,15 +3,35 @@
 #include "IGameObject.h"
 #include "Tree.h"
 #include <SFML/Graphics.hpp>
-
+#include "Animation.h"
 #include "PlayerShip.h"
 
 class IGameObjectContainer;
 
-class Boss : public IGameObject
+
+namespace SamuraiStateNames
+{
+    enum class SamuraiState
+    {
+        Idle,
+        sprint,
+        Hurt,
+        MeleeAttack,
+        DistanceAttack,
+        walk,
+    };
+}
+
+
+
+
+
+
+
+class Samurai : public IGameObject
 {
 public:
-    Boss(IGameObjectContainer& game, const Vec2& position);
+    Samurai(IGameObjectContainer& game, const Vec2& position);
 
     void handleInputs(const sf::Event& event) override;
     void update(float deltaTime) override;
@@ -21,42 +41,50 @@ public:
     void takeDamage(int dmg = 1);
     void die();
 
-    void fireWithPistol() const;
-    void fireWithShotgun()const;
-    void Laser();
+    void fireWithPistol();
     void RightMelee();
-    void LeftMelee();
-    void Kick();
+
 
     bool findValidTarget();
     bool isCurrentTargetValid() const;
     void setSpeed(const int& Speed);
     float calculateAngleToTarget() const;
-    void Dash(const float& angle);
+
 
     Vec2 getPosition() const;
     Vec2 getDistanceToPlayer() const;
-    Vec2 getDistanceToCenter() const;
-    Vec2 getCenter()const;
+    float getAngle()const;
+
     int getHP()const;
     int getMaxHP()const;
-    bool IsKickedPlayer()const;
-    bool m_dashing;
-    float SpeedLimit;
-    bool GoingToCenter;
+
+
+    float SpeedLimit = 0;
+
 private:
-    int m_speed;
+    SamuraiStateNames::SamuraiState* m_currentState;
+
+    int m_speed = 0;
     float m_angle;
 
-    int m_HP;
-    int m_MaxHP;
-    bool m_isDead;
-    bool m_isInvincible;
+    int m_HP = 2;
+    int m_MaxHP = m_HP;
+    bool m_isDead = false;
+    bool m_isInvincible = false;
+    const float m_invincibility = 0.1f;
+    sf::Clock m_clockHit;
+    sf::Time m_elapsedTimeHit;
+
+    sf::Texture m_spriteSheet;
     sf::Sprite m_sprite;
     BT::RootNode m_rootNode;
     Vec2 m_position;
-    Vec2 m_velocity;
+    Vec2 m_velocity = { 0.f,0.f };
     std::vector<IGameObject*> m_allGameObjects;
     PlayerShip* m_currentTarget;
-};
 
+
+
+    SheetToBeAnimated testtt;
+    
+};
