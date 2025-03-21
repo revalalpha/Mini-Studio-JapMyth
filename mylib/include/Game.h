@@ -10,6 +10,7 @@ public:
 	~Game() = default;
 
 	void setPlayer();
+	void setMap();
 	void setEnemy();
 	void initialize();
 
@@ -17,8 +18,12 @@ public:
 	void update(const float& deltaTime) override;
 	void render() override;
 
+	void addCameraToPlayer();
+	std::shared_ptr<Hero> createPlayer();
+
 private:
 	std::shared_ptr<Hero> m_player;
 	sf::Sprite m_mapSprite;
+	sf::Sprite m_heroTexture;
 	std::vector<std::shared_ptr<ComponentGameObject>> m_gameObjects;
 };

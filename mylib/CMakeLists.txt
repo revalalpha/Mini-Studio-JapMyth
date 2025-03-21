@@ -26,9 +26,7 @@ set(SOURCES
     ${SOURCE_DIR}/PathFinder.cpp
     ${SOURCE_DIR}/TextureManager.cpp
     ${SOURCE_DIR}/Tree.cpp
-    ${SOURCE_DIR}/State.cpp
     ${SOURCE_DIR}/StateManager.cpp
-    ${SOURCE_DIR}/StateFactory.cpp
 )
 
 set(HEADERS
@@ -54,9 +52,7 @@ set(HEADERS
     ${HEADER_DIR}/PathFinder.h
     ${HEADER_DIR}/TextureManager.h
     ${HEADER_DIR}/Tree.h
-    ${HEADER_DIR}/State.h
     ${HEADER_DIR}/StateManager.h
-    ${HEADER_DIR}/StateFactory.h
 
 )
 

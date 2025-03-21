@@ -12,26 +12,18 @@ Game::Game(sf::RenderWindow* window, const float& framerate, TextureCache* textu
 
 void Game::setPlayer()
 {
-    m_player = std::make_shared<Hero>("Player");
+    m_player = createPlayer();
 
-    m_player->getSprite().setPosition(500, 500);
-
-    m_player->setState(stateName::idle);
-
-    auto cameraTarget = std::make_shared<CameraTarget>(1.0f, true);
-    m_player->addComponent(cameraTarget);
+	addCameraToPlayer();
     m_gameObjects.push_back(m_player);
 }
 
-//void Game::setPlayer()
-//{
-//    std::string heroTexture = "Hero"; // Nom exact donné dans loadTexture()
-//
-//    if (!TextureManager::getInstance().hasTexture(heroTexture))
-//    {
-//        std::cerr << "Erreur : La texture '" << heroTexture << "' n'a pas été chargée avant la création du joueur !" << std::endl;
-//    }
-//}
+std::shared_ptr<Hero> Game::createPlayer()
+{
+    auto player = std::make_shared<Hero>("Player");
+    player->initialize(sf::Vector2f(4000.f, 1000.f), 50.f, sf::Color::Transparent, 300.f);
+    return player;
+}
 
 void Game::setEnemy()
 {
@@ -39,21 +31,32 @@ void Game::setEnemy()
 
 void Game::initialize()
 {
-    sf::Texture& mapTexture = m_texture_cache->GetTexture("map\\Map.png");
-	m_mapSprite.setTexture(mapTexture);
-	m_mapSprite.setPosition(0, 0);
-    setPlayer();
-
     Camera::getInstance().initialize(m_renderWindow);
     Camera::getInstance().setZoom(1.f);
     Camera::getInstance().setInterpolationSpeed(4.0f);
+
+    setMap();
+    setPlayer();
+}
+
+void Game::setMap()
+{
+    sf::Texture& mapTexture = m_texture_cache->GetTexture("map\\Map.png");
+    m_mapSprite.setTexture(mapTexture);
+    m_mapSprite.setPosition(m_renderWindow->getPosition().x, m_renderWindow->getPosition().y);
+}
+
+
+void Game::addCameraToPlayer()
+{
+    auto cameraTarget = std::make_shared<CameraTarget>(1.0f, true);
+    m_player->addComposite(cameraTarget);
 }
 
 
 void Game::processInput(const sf::Event& event)
 {
     m_player->processInput(event);
-    m_player->handleInputs(event);
 
     SceneBase::processInput(event);
 }
@@ -69,7 +72,7 @@ void Game::update(const float& deltaTime)
 
     SquareRenderer* playerRender = nullptr;
 
-    playerRender = dynamic_cast<SquareRenderer*>(m_player->getComponent("SquareRenderer"));
+    playerRender = dynamic_cast<SquareRenderer*>(m_player->getComposite("SquareRenderer"));
     if (playerRender) {
         sf::Vector2f playerPos = playerRender->getPosition();
         /*IEnemy::updateAllEnemyLOS(m_gameObjects, playerPos);*/
@@ -86,8 +89,6 @@ void Game::render()
 
     for (auto& gameObject : m_gameObjects)
         gameObject->render(*m_renderWindow);
-
-    m_renderWindow->draw(m_player->getSprite());
 
     SceneBase::render();
 }
