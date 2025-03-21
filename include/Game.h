@@ -29,7 +29,6 @@ public:
 
     TextureCache& getTextureCache();
 
-    sf::Vector2f getMouse();
     
     virtual Game& getGame() override { return *this; }
     Vec2 getWindowSize()const;
@@ -45,5 +44,6 @@ private_members:
     float m_Width;
     float m_Height;
     sf::Vector2f worldPos;
-    
+    sf::Texture m_background;
+    sf::Sprite m_backgroundSprite;
 };
