@@ -226,13 +226,13 @@ void Samurai::update(float deltaTime)
 
 
     Vec2 PreviousPos = m_position;
-    if (m_position.x > m_owner.getGame().getWindowSize().x - 200.f)
+    if (m_position.x > m_owner.getGame().getWindowSize().x - 300.f)
         m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
-    else if (m_position.y > m_owner.getGame().getWindowSize().y - 200.f)
+    else if (m_position.y > m_owner.getGame().getWindowSize().y - 260.f)
         m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
-    else if (m_position.x < 200)
+    else if (m_position.x < 300)
         m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
-    else if (m_position.y < 200)
+    else if (m_position.y < 360)
         m_position = { PreviousPos.x ,PreviousPos.y + 0.5f };
     else
         m_position += m_velocity * deltaTime;

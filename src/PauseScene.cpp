@@ -16,9 +16,9 @@ PauseScene::PauseScene(sf::RenderWindow* window, SceneManager* sceneManager, con
 void PauseScene::setPauseText(sf::RenderWindow* window)
 {
     // TITLE
-    m_titleFont.loadFromFile(_m_textureCache.getAbsoluteFilepath("BreatheFireIi-2z9W.ttf"));
+    m_titleFont.loadFromFile(_m_textureCache.getAbsoluteFilepath("MochiyPopPOne-Regular.ttf"));
     m_text.setFont(m_titleFont);
-    m_text.setString("R I S I N G");
+    m_text.setString("Bushido no Michi");
     m_text.setCharacterSize(100);
     m_text.setFillColor(sf::Color(255, 215, 0));
     m_text.setStyle(sf::Text::Bold);
@@ -32,7 +32,7 @@ void PauseScene::setPauseText(sf::RenderWindow* window)
     // MENU
     std::vector<std::string> titles = { "R E S U M E", "E X I T" };
 
-    m_font.loadFromFile(_m_textureCache.getAbsoluteFilepath("BreatheFireIi-2z9W.ttf"));
+    m_font.loadFromFile(_m_textureCache.getAbsoluteFilepath("MochiyPopPOne-Regular.ttf"));
 
     float boxWidth = 350.f;
     float boxHeight = 80.f;

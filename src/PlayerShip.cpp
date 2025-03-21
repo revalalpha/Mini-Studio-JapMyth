@@ -7,7 +7,7 @@
 #include "OrbitalProjectile.h"
 
 
-Vec2 getPlayerShipSize() { return { 32.f, 32.f }; }
+Vec2 getPlayerShipSize() { return { 64.f, 32.f }; }
 float getPlayerShipThrust() { return 3000.f; }
 float getPlayerShipRateOfTurn() { return 0.08f; }
 float getPlayerShipFluidFrictionCoef() { return 10.0f; }
@@ -17,7 +17,7 @@ float getPlayerShipMaxVelocity() { return 650.f; }
 PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
     , PlayerSheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("samurai.png"))
-    , m_HP(15)
+    , m_HP(10)
     , m_MaxHP(m_HP)
     , m_angle(-90.f * 3.14 / 180)
 	, m_mouseAngle(0.f)
@@ -196,17 +196,31 @@ void PlayerShip::update(float deltaTime)
     else
 		m_sprite = PlayerSheet.Animation(deltaTime, 1, 1, 1, 0.0f, true);
     
-    //Vec2 PreviousPos = m_position;
-    //if (m_position.x > m_owner.getGame().getWindowSize().x - 200.f )
-    //    m_position = {PreviousPos.x-0.5f,PreviousPos.y };
-    //else if (m_position.y > m_owner.getGame().getWindowSize().y - 150.f)
-    //    m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
-    //else if (m_position.x < 200)
-    //    m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
-    //else if (m_position.y < 150)
-    //    m_position = { PreviousPos.x ,PreviousPos.y+0.5f };
-    //else
+    Vec2 PreviousPos = m_position;
+    if (m_position.x > m_owner.getGame().getWindowSize().x - 300.f)
+        m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
+    else if (m_position.y > m_owner.getGame().getWindowSize().y - 260.f)
+        m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
+    else if (m_position.x < 300)
+        m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
+    else if (m_position.y < 360)
+        m_position = { PreviousPos.x ,PreviousPos.y + 0.5f };
+    //else if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 550.f) && m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f)&& m_position.x >(m_owner.getGame().getWindowSize().y / 2.f - 450.f) && m_position.x < (m_owner.getGame().getWindowSize().y / 2.f + 450.f))
+    //{
+	   // 
+    //    
+    //    if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 550.f))
+    //        m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
+    //    else if (m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f))
+    //        m_position = { PreviousPos.x  ,PreviousPos.y + 0.5f };
+    //    if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 450.f))
+    //        m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
+    //    else if (m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 450.f))
+    //        m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
+    //}
+    else
 		m_position += m_velocity * deltaTime;
+
     m_velocity += acceleration * deltaTime;
 
     if (m_velocity.getLength() > getPlayerShipMaxVelocity()&&!m_daching)

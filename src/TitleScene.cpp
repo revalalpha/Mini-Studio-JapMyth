@@ -16,9 +16,9 @@ TitleScene::TitleScene(sf::RenderWindow* window, SceneManager* sceneManager, con
 void TitleScene::setStartText(sf::RenderWindow* window)
 {
     // TITLE
-    m_titleFont.loadFromFile(_m_textureCache.getAbsoluteFilepath("BreatheFireIi-2z9W.ttf"));
+    m_titleFont.loadFromFile(_m_textureCache.getAbsoluteFilepath("MochiyPopPOne-Regular.ttf"));
     m_gameTitle.setFont(m_titleFont);
-    m_gameTitle.setString("R I S I N G");
+    m_gameTitle.setString("");
     m_gameTitle.setCharacterSize(100);
     m_gameTitle.setFillColor(sf::Color(255, 215, 0));
     m_gameTitle.setStyle(sf::Text::Bold);
@@ -32,7 +32,7 @@ void TitleScene::setStartText(sf::RenderWindow* window)
     // MENU
     std::vector<std::string> titles = { "P L A Y", "E X I T" };
 
-    m_font.loadFromFile(_m_textureCache.getAbsoluteFilepath("BreatheFireIi-2z9W.ttf"));
+    m_font.loadFromFile(_m_textureCache.getAbsoluteFilepath("MochiyPopPOne-Regular.ttf"));
 
     float boxWidth = 350.f;
     float boxHeight = 80.f;
@@ -52,10 +52,10 @@ void TitleScene::setStartText(sf::RenderWindow* window)
 
 void TitleScene::setBackground(sf::RenderWindow* window)
 {
-    m_background.loadFromFile(_m_textureCache.getAbsoluteFilepath("dungeon_background_5.png"));
+    m_background.loadFromFile(_m_textureCache.getAbsoluteFilepath("page debut.jpg"));
     m_backgroundSprite.setTexture(m_background);
     m_backgroundSprite.setPosition(m_renderWindow->getPosition().x, m_renderWindow->getPosition().y);
-    m_backgroundSprite.setScale(1.3, 1.1);
+    m_backgroundSprite.setScale(0.55f, 0.45f);
 }
 
 void TitleScene::playAudio(sf::RenderWindow* window)
