@@ -59,7 +59,7 @@ Camera::Camera()
     m_targetPosition(0.f, 0.f),
     m_currentPosition(0.f, 0.f),
     m_hasBounds(false),
-    m_zoom(1.0f),
+    m_zoom(0.5f),
     m_rotation(0.0f),
     m_interpolationSpeed(5.0f),
     m_lookAheadFactor(0.2f),

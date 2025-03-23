@@ -25,6 +25,7 @@ set(SOURCES
     ${SOURCE_DIR}/SceneBase.cpp
     ${SOURCE_DIR}/PathFinder.cpp
     ${SOURCE_DIR}/TextureManager.cpp
+    ${SOURCE_DIR}/TextureCache.cpp
     ${SOURCE_DIR}/Tree.cpp
     ${SOURCE_DIR}/StateManager.cpp
 )
@@ -51,6 +52,7 @@ set(HEADERS
     ${HEADER_DIR}/SceneBase.h
     ${HEADER_DIR}/PathFinder.h
     ${HEADER_DIR}/TextureManager.h
+    ${HEADER_DIR}/TextureCache.h
     ${HEADER_DIR}/Tree.h
     ${HEADER_DIR}/StateManager.h
 

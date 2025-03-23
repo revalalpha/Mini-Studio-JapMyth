@@ -21,7 +21,7 @@ void Game::setPlayer()
 std::shared_ptr<Hero> Game::createPlayer()
 {
     auto player = std::make_shared<Hero>("Player");
-    player->initialize(sf::Vector2f(4000.f, 1000.f), 50.f, sf::Color::Transparent, 300.f);
+    player->initialize(sf::Vector2f(1000, 1000.f), 50.f, sf::Color::Transparent, 300.f);
     return player;
 }
 
@@ -45,7 +45,6 @@ void Game::setMap()
     m_mapSprite.setTexture(mapTexture);
     m_mapSprite.setPosition(m_renderWindow->getPosition().x, m_renderWindow->getPosition().y);
 }
-
 
 void Game::addCameraToPlayer()
 {
@@ -88,7 +87,10 @@ void Game::render()
     m_renderWindow->draw(m_mapSprite);
 
     for (auto& gameObject : m_gameObjects)
+    {
+        std::cout << "Rendering: " << gameObject->getName() << std::endl;
         gameObject->render(*m_renderWindow);
+    }
 
     SceneBase::render();
 }

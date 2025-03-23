@@ -495,6 +495,7 @@
 #include "Animation.h"
 #include "CollisionHitbox.h"
 //#include "Effect.h"
+#include <iostream>
 
 Hero::Hero(const std::string& name)
     : ComponentGameObject(name)
@@ -510,6 +511,7 @@ Hero::Hero(const std::string& name)
 {
     setCategory("Player");
     addTag("Hero");
+    std::cout << "Création d'une instance de Hero : " << this << std::endl;
 }
 
 void Hero::initialize(const sf::Vector2f& position, const float& size, const sf::Color& color, const float& speed)
