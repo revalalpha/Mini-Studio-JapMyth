@@ -9,7 +9,7 @@ class TextureCache;
 class SceneBase
 {
 public:
-    SceneBase(sf::RenderWindow* window, const float& framerate, TextureCache* textureCache, const std::string& name = "Scene");
+    SceneBase(sf::RenderWindow* window, const float& framerate, const std::string& name = "Scene");
     virtual ~SceneBase() = default;
 
     virtual void processInput(const sf::Event& event);

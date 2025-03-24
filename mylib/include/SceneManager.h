@@ -9,7 +9,7 @@ class TextureCache;
 class SceneManager
 {
 public:
-	SceneManager(const int& width, const int& height, const std::string& title, const std::string& filepath);
+	SceneManager(const int& width, const int& height, const std::string& title);
 
 	void addScene(std::unique_ptr<SceneBase> scene);
 	sf::RenderWindow* getWindow();

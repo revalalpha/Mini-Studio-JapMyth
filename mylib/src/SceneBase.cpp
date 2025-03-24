@@ -6,11 +6,10 @@
 
 SceneBase* SceneBase::m_currentScene = nullptr;
 
-SceneBase::SceneBase(sf::RenderWindow* window, const float& framerate, TextureCache* textureCache ,const std::string& name)
+SceneBase::SceneBase(sf::RenderWindow* window, const float& framerate,const std::string& name)
     : m_renderWindow(window)
     , m_refreshTime(sf::seconds(1.f / framerate))
     , m_name(name)
-	, m_texture_cache(textureCache)
 {
     m_currentScene = this;
 }

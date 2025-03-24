@@ -2,11 +2,12 @@
 
 #include "Hero.h"
 #include "SceneBase.h"
+#include "Map.h"
 
 class Game : public SceneBase
 {
 public:
-	Game(sf::RenderWindow* window, const float& framerate, TextureCache* texture);
+	Game(sf::RenderWindow* window, const float& framerate);
 	~Game() = default;
 
 	void setPlayer();
@@ -20,10 +21,13 @@ public:
 
 	void addCameraToPlayer();
 	std::shared_ptr<Hero> createPlayer();
-
+	std::shared_ptr<Map> createMap();
+	Game* getInstance();
 private:
 	std::shared_ptr<Hero> m_player;
-	sf::Sprite m_mapSprite;
+	std::shared_ptr<Map> m_map;
 	sf::Sprite m_heroTexture;
 	std::vector<std::shared_ptr<ComponentGameObject>> m_gameObjects;
+	static Game* m_gameInstance;
+
 };

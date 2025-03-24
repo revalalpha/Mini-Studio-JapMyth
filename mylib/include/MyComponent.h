@@ -22,3 +22,14 @@ public:
 private:
 	std::unordered_map<std::string, std::shared_ptr<Composite>> m_components;
 };
+
+class ComponentScene : public SceneBase
+{
+public:
+	ComponentScene(sf::RenderWindow* window, const float& framerate, const std::string& name = "CompositeScene");
+	~ComponentScene() = default;
+
+	void processInput(const sf::Event& event) override;
+	void update(const float& deltaTime) override;
+	void render() override;
+};

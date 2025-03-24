@@ -51,3 +51,26 @@ void ComponentGameObject::removeComposite(const std::string& name)
 	if (it != m_components.end())
 		m_components.erase(it);
 }
+
+ComponentScene::ComponentScene(sf::RenderWindow* window, const float& framerate, const std::string& name)
+	: SceneBase(window, framerate, name)
+{
+}
+
+void ComponentScene::processInput(const sf::Event& event)
+{
+	for (auto& child : m_children)
+		child->processInput(event);
+}
+
+void ComponentScene::update(const float& deltaTime)
+{
+	for (auto& child : m_children)
+		child->update(deltaTime);
+}
+
+void ComponentScene::render()
+{
+	for (auto& child : m_children)
+		child->render();
+}

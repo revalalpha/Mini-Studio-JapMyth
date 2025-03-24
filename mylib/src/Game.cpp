@@ -2,11 +2,16 @@
 #include "Scrolling.h"
 #include "Enemy.h"
 #include "TextureManager.h"
+#include "TextureCache.h"
+#include "PathFinder.h"
 #include <iostream>
 
-Game::Game(sf::RenderWindow* window, const float& framerate, TextureCache* texture)
-    : SceneBase(window, framerate, texture)
+Game* Game::m_gameInstance = nullptr;
+
+Game::Game(sf::RenderWindow* window, const float& framerate)
+    : SceneBase(window, framerate)
 {
+    m_gameInstance = this;
     initialize();
 }
 
@@ -15,15 +20,25 @@ void Game::setPlayer()
     m_player = createPlayer();
 
 	addCameraToPlayer();
-    m_gameObjects.push_back(m_player);
+    m_gameObjects.push_back(std::static_pointer_cast<ComponentGameObject>(m_player));
 }
 
 std::shared_ptr<Hero> Game::createPlayer()
 {
     auto player = std::make_shared<Hero>("Player");
+    if (!player)
+    {
+        std::cerr << "Failed to create player" << std::endl;
+    }
+    else
+    {
+        std::cout << "Player created successfully" << std::endl;
+    }
     player->initialize(sf::Vector2f(1000, 1000.f), 50.f, sf::Color::Transparent, 300.f);
     return player;
 }
+
+
 
 void Game::setEnemy()
 {
@@ -31,6 +46,9 @@ void Game::setEnemy()
 
 void Game::initialize()
 {
+	TextureManager::getInstance().initialize();
+    TextureManager::getInstance().loadAllGameTextures();
+
     Camera::getInstance().initialize(m_renderWindow);
     Camera::getInstance().setZoom(1.f);
     Camera::getInstance().setInterpolationSpeed(4.0f);
@@ -41,10 +59,18 @@ void Game::initialize()
 
 void Game::setMap()
 {
-    sf::Texture& mapTexture = m_texture_cache->GetTexture("map\\Map.png");
-    m_mapSprite.setTexture(mapTexture);
-    m_mapSprite.setPosition(m_renderWindow->getPosition().x, m_renderWindow->getPosition().y);
+    m_map = createMap();
+    m_gameObjects.push_back(std::static_pointer_cast<ComponentGameObject>(m_map));
 }
+
+std::shared_ptr<Map> Game::createMap()
+{
+    auto map = std::make_shared<Map>("Sprites\\map\\Map.png");
+    std::cout << "map is loaded" << std::endl;
+    map->load();
+    return map;
+}
+
 
 void Game::addCameraToPlayer()
 {
@@ -84,7 +110,10 @@ void Game::render()
 {
     Camera::getInstance().apply();
 
-    m_renderWindow->draw(m_mapSprite);
+    if (m_map) {
+        std::cout << "Rendering: Map" << std::endl;
+        m_map->render(*m_renderWindow);
+    }
 
     for (auto& gameObject : m_gameObjects)
     {
@@ -93,4 +122,9 @@ void Game::render()
     }
 
     SceneBase::render();
+}
+
+Game* Game::getInstance()
+{
+    return m_gameInstance;
 }

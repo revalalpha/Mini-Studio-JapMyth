@@ -19,6 +19,7 @@ set(SOURCES
     ${SOURCE_DIR}/MyComposite.cpp
     ${SOURCE_DIR}/MyComponent.cpp
     ${SOURCE_DIR}/MyMath.cpp
+    ${SOURCE_DIR}/Map.cpp
     ${SOURCE_DIR}/Scrolling.cpp
     ${SOURCE_DIR}/PauseScene.cpp
     ${SOURCE_DIR}/SceneManager.cpp
@@ -46,6 +47,7 @@ set(HEADERS
     ${HEADER_DIR}/MyComposite.h
     ${HEADER_DIR}/MyComponent.h
     ${HEADER_DIR}/MyMath.h
+    ${HEADER_DIR}/Map.h
     ${HEADER_DIR}/PauseScene.h
     ${HEADER_DIR}/SceneManager.h
     ${HEADER_DIR}/Scrolling.h
