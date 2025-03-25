@@ -30,25 +30,34 @@ protected:
     Hero* m_owner;
     static bool m_mouseLeftPressed;
 
-    const int idleFrameCount = 2;
-    const int runFrameCount = 4;
-    const int shootFrameCount = 6;
-    const int attackFrameCount = 6;
+    const int idleFrameCount =1;
+    const int runFrameCount = 2;
+    const int shootFrameCount = 3;
+    const int attackFrameCount = 3;
     const int hurtFrameCount = 1;
-    const int deathFrameCount = 19;
+    const int deathFrameCount = 3;
 
     const int downRow = 0;
-    const int rightRow = 1;
-    const int upRow = 2;
-    const int deathRow = 3;
+    const int rightRow = 3;
+    const int upRow = 1;
+
+    const int shootdownRow = 8;
+    const int shootrightRow =11;
+    const int shootupRow = 9;
+
+    const int attackdownRow = 4;
+    const int attackrightRow = 7;
+    const int attackupRow = 5;
+
+    const int deathRow = 12;
     const int hurtRow = 4;
 
     const int idleOffset = 0;
     const int runOffset = idleFrameCount;
-    const int shootOffset = runOffset + runFrameCount;
-    const int attackOffset = shootOffset + shootFrameCount;
-    const int deathOffset = attackOffset + attackFrameCount;
-    const int hurtOffset = deathOffset + deathFrameCount;
+    const int shootOffset = 0;
+    const int attackOffset = 0;
+    const int deathOffset = 0;
+    const int hurtOffset = deathFrameCount;
 };
 
 // State implementations

@@ -9,9 +9,10 @@ Animation::Animation()
     , m_currentFrame(0)
     , m_looping(true)
     , m_finished(false)
-    , m_frameSize(32, 32)
+    , m_frameSize(512, 512)
     , m_startPosition(0, 0)
 {
+    
 }
 
 Animation::Animation(const std::string& textureName, int frameCount, float frameTime, bool looping)
@@ -22,9 +23,10 @@ Animation::Animation(const std::string& textureName, int frameCount, float frame
     , m_currentFrame(0)
     , m_looping(looping)
     , m_finished(false)
-    , m_frameSize(32, 32)
+    , m_frameSize(512, 512)
     , m_startPosition(0, 0)
 {
+    
 }
 
 void Animation::update(float deltaTime)
@@ -113,6 +115,9 @@ AnimationComponent::AnimationComponent()
     , m_scale(1.0f, 1.0f)
     , m_playing(false)
 {
+    
+    m_sprite.setTexture(*TextureManager::getInstance().getTexture("player"));
+    
 }
 
 void AnimationComponent::initialize()
@@ -128,6 +133,7 @@ void AnimationComponent::update(const float& deltaTime)
     auto& animation = m_animations[m_currentAnimation];
     animation.update(deltaTime);
 
+
     m_sprite.setTextureRect(animation.getCurrentFrameRect());
 }
 
@@ -136,6 +142,7 @@ void AnimationComponent::render(sf::RenderWindow& window)
     if (!m_playing || m_currentAnimation.empty())
         return;
 
+    
     window.draw(m_sprite);
 }
 

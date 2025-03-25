@@ -511,6 +511,8 @@ Hero::Hero(const std::string& name)
 {
     setCategory("Player");
     addTag("Hero");
+    setDirection(Direction::Down);
+    setState(stateName::idle);
     std::cout << "Création d'une instance de Hero : " << this << std::endl;
 }
 
@@ -556,7 +558,15 @@ void Hero::update(const float& deltaTime)
     ComponentGameObject::update(deltaTime);
     m_stateManager.update(deltaTime);
     updateAnimationPosition();
+
 }
+//void Hero::render(sf::RenderWindow& window)
+//{
+//    auto animation_component = static_cast<AnimationComponent*>(getComposite("AnimationComponent"));
+//    //animation_component->playAnimation();
+//    animation_component->render(window);
+//}
+
 
 void Hero::updateAnimationPosition()
 {
@@ -567,8 +577,10 @@ void Hero::updateAnimationPosition()
     {
         sf::Vector2f position = square_renderer->getPosition();
         animation_component->updatePosition(position);
+        
     }
 }
+
 
 void Hero::processInput(const sf::Event& event)
 {

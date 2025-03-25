@@ -37,6 +37,7 @@ private:
     bool m_finished;
     sf::Vector2i m_frameSize;
     sf::Vector2i m_startPosition;
+    
 };
 
 class AnimationComponent : public Composite

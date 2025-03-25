@@ -149,6 +149,7 @@ public:
 
     void update(const float& deltaTime) override;
     void processInput(const sf::Event& event) override;
+    //void render(sf::RenderWindow& window)override;
 
     bool isAlive() const;
     bool isFacingLeft() const;

@@ -98,7 +98,7 @@ void IdleState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation idleDownAnim("player", idleFrameCount, 0.4f);
     idleDownAnim.setFrameSize(frameSize);
@@ -224,7 +224,7 @@ void RunState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation runDownAnim("player", runFrameCount, 0.1f);
     runDownAnim.setFrameSize(frameSize);
@@ -351,21 +351,21 @@ void AttackState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation attackDownAnim("player", attackFrameCount, 0.1f, false);
     attackDownAnim.setFrameSize(frameSize);
-    attackDownAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, downRow * frameSize.y));
+    attackDownAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, attackdownRow * frameSize.y));
     animation_component->addAnimation("attack_down", attackDownAnim);
 
     Animation attackUpAnim("player", attackFrameCount, 0.1f, false);
     attackUpAnim.setFrameSize(frameSize);
-    attackUpAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, upRow * frameSize.y));
+    attackUpAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, attackupRow * frameSize.y));
     animation_component->addAnimation("attack_up", attackUpAnim);
 
     Animation attackRightAnim("player", attackFrameCount, 0.1f, false);
     attackRightAnim.setFrameSize(frameSize);
-    attackRightAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, rightRow * frameSize.y));
+    attackRightAnim.setStartPosition(sf::Vector2i(attackOffset * frameSize.x, attackrightRow * frameSize.y));
     animation_component->addAnimation("attack_right", attackRightAnim);
 }
 
@@ -454,21 +454,21 @@ void ShootState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation shootDownAnim("player", shootFrameCount, 0.1f, false);
     shootDownAnim.setFrameSize(frameSize);
-    shootDownAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, downRow * frameSize.y));
+    shootDownAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, shootdownRow * frameSize.y));
     animation_component->addAnimation("shoot_down", shootDownAnim);
 
     Animation shootUpAnim("player", shootFrameCount, 0.1f, false);
     shootUpAnim.setFrameSize(frameSize);
-    shootUpAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, upRow * frameSize.y));
+    shootUpAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, shootupRow * frameSize.y));
     animation_component->addAnimation("shoot_up", shootUpAnim);
 
     Animation shootRightAnim("player", shootFrameCount, 0.1f, false);
     shootRightAnim.setFrameSize(frameSize);
-    shootRightAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, rightRow * frameSize.y));
+    shootRightAnim.setStartPosition(sf::Vector2i(shootOffset * frameSize.x, shootrightRow * frameSize.y));
     animation_component->addAnimation("shoot_right", shootRightAnim);
 
 }
@@ -546,7 +546,7 @@ void HurtState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation hurtAnim("player", hurtFrameCount, 1.f, false);
     hurtAnim.setFrameSize(frameSize);
@@ -595,7 +595,7 @@ void DeathState::configureAnimation()
     if (!animation_component)
         return;
 
-    const sf::Vector2i frameSize(32, 32);
+    const sf::Vector2i frameSize(512, 512);
 
     Animation deathAnim("player", deathFrameCount, 0.2f, false);
     deathAnim.setFrameSize(frameSize);
