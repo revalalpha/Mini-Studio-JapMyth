@@ -51,7 +51,7 @@ Game::Game(sf::RenderWindow& window, const std::string& execPath)
  //       Vec2(800.f, 1000.f)
  //   );
 
-    new PlayerShip(*this, {1000.f, 1000.f});
+    new PlayerShip(*this, {2000.f, 1000.f});
     new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f- 2000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f -200.f});
     new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 1000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 50 });
     new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 500.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 100});

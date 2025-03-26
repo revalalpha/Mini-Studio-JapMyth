@@ -7,7 +7,7 @@
 #include "OrbitalProjectile.h"
 
 
-Vec2 getPlayerShipSize() { return { 64.f, 32.f }; }
+Vec2 getPlayerShipSize() { return { 72.f, 32.f }; }
 float getPlayerShipThrust() { return 3000.f; }
 float getPlayerShipRateOfTurn() { return 0.08f; }
 float getPlayerShipFluidFrictionCoef() { return 10.0f; }
@@ -16,7 +16,7 @@ float getPlayerShipMaxVelocity() { return 650.f; }
 
 PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
-    , PlayerSheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("samurai.png"))
+    , PlayerSheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("Shinigami personnage principale.png"))
     , m_HP(10)
     , m_MaxHP(m_HP)
     , m_angle(-90.f * 3.14 / 180)
@@ -32,8 +32,8 @@ PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     , m_Shooting(false)
     , m_daching(false)
     , m_isInvincible(false)
-    , m_invincibility(0.7f)
-    , m_dashCooldown(1.f)
+    , m_invincibility(0.6f)
+    , m_dashCooldown(1.5f)
     , m_dashTime(0.3f)
     , isKick(false)
     , KBTime(0.5f)
@@ -234,7 +234,7 @@ void PlayerShip::render(sf::RenderWindow& window)
     m_sprite.setColor(sf::Color(255, 255, 255, 255));
     if (m_daching || m_isInvincible)
     {
-	    m_sprite.setColor(sf::Color(255, 50, 50, 128));
+	    m_sprite.setColor(sf::Color(50, 50, 50, 128));
     	m_isInvincible = false;
     }
 

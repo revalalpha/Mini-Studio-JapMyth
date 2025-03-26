@@ -67,7 +67,7 @@ private:
     int m_speed = 0;
     float m_angle;
 
-    int m_HP = 2;
+    int m_HP = 3;
     int m_MaxHP = m_HP;
     bool m_isDead = false;
     bool m_isInvincible = false;
