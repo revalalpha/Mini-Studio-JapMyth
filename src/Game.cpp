@@ -2,6 +2,7 @@
 
 #include <array>
 #include <filesystem>
+#include <random>
 
 #include "IGameObject.h"
 
@@ -9,6 +10,8 @@
 
 
 #include "Barrier.h"
+#include "Inugami.h"
+#include "Kappa.h"
 #include "Samurai.h"
 
 
@@ -46,18 +49,18 @@ Game::Game(sf::RenderWindow& window, const std::string& execPath)
         Vec2(30.0f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) + 40.0f)
     );
     
-	//new Barrier(*this,
- //       Vec2((m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.f),
- //       Vec2(800.f, 1000.f)
- //   );
+	new Barrier(*this,
+        Vec2((m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.f),
+        Vec2(800.f, 1000.f)
+    );
 
-    new PlayerShip(*this, {2000.f, 1000.f});
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f- 2000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f -200.f});
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 1000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 50 });
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 500.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 100});
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 1000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 50 });
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 500.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 100 });
-    new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 2000.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 200 });
+    new PlayerShip(*this, {4000.f, 1000.f});
+    //new Inugami(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f- 2000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f -200.f});
+    //new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 1000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 50 });
+    //new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 500.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f + 100});
+    //new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 1000.f, (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 50 });
+    //new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 500.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 100 });
+    //new Samurai(*this, { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f) / 2.0f - 2000.f,(m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) / 2.0f - 200 });
 
 }
 
@@ -70,8 +73,49 @@ Vec2 Game::getWindowSize()const
     return { (m_backgroundSprite.getLocalBounds().getSize().x * 1.4f), (m_backgroundSprite.getLocalBounds().getSize().y * 1.2f) };
 }
 
+void Game::Spawner()
+{
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> enemy(1, 3);
+    std::uniform_int_distribution<std::mt19937::result_type> posx(310, getWindowSize().x - 310.f);
+    std::uniform_int_distribution<std::mt19937::result_type> posy(370, getWindowSize().y - 270.f);
+
+    Vec2 position = { static_cast<float>(posx(rng)) ,static_cast<float>(posy(rng)) };
+    
+    if (position.x > getWindowSize().x / 2.f - 490.f && position.x < getWindowSize().x / 2.f + 490.f && position.y >getWindowSize().y / 2.f - 650.f && position.y < getWindowSize().y / 2.f + 550.f)
+    {
+        return;
+    }
+
+    if (enemy(rng) == 1)
+    {
+        new Samurai(*this, position);
+    }
+    if (enemy(rng) == 2)
+    {
+        new Kappa(*this, position);
+    }
+    if (enemy(rng)==3)
+    {
+        new Inugami(*this, position);
+    }
+    
+
+}
+
+
 void Game::update(const float& delaTime)
 {
+    m_elapsedTimeSpawn = m_clockSpawnTime.getElapsedTime();
+
+    if (m_elapsedTimeSpawn.asSeconds() >= m_SpawnTime)
+    {
+
+        Spawner();
+        m_clockSpawnTime.restart();
+    }
+
     _deferedAddObjects();
 
     detectCollision();

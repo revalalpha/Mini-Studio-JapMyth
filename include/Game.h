@@ -28,7 +28,7 @@ public:
     void render(sf::RenderWindow& window);
 
     TextureCache& getTextureCache();
-
+    void Spawner();
     
     virtual Game& getGame() override { return *this; }
     Vec2 getWindowSize()const;
@@ -46,4 +46,8 @@ private_members:
     sf::Vector2f worldPos;
     sf::Texture m_background;
     sf::Sprite m_backgroundSprite;
+
+    const float m_SpawnTime=5.f;
+    sf::Clock m_clockSpawnTime;
+    sf::Time m_elapsedTimeSpawn;
 };

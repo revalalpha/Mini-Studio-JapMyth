@@ -10,10 +10,10 @@ class IGameObjectContainer;
 
 
 
-class Samurai : public IGameObject
+class Inugami : public IGameObject
 {
 public:
-    Samurai(IGameObjectContainer& game, const Vec2& position);
+    Inugami(IGameObjectContainer& game, const Vec2& position);
 
     void handleInputs(const sf::Event& event) override;
     void update(float deltaTime) override;
@@ -48,8 +48,8 @@ private:
     int m_speed = 0;
     float m_angle;
 
-    int m_HP = 4;
-    int scorePoint = 15;
+    int m_HP = 2;
+    int scorePoint = 20;
     int m_MaxHP = m_HP;
     bool m_isDead = false;
     bool m_isInvincible = false;
@@ -62,7 +62,7 @@ private:
 
     sf::Texture m_spriteSheet;
     sf::Sprite m_sprite;
-    BT::RootNode m_rootNode1;
+    BT::RootNode m_rootNode;
     Vec2 m_position;
     Vec2 m_velocity = { 0.f,0.f };
     std::vector<IGameObject*> m_allGameObjects;

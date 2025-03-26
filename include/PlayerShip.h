@@ -23,6 +23,7 @@ public:
     float getAngle() const;
 
     bool isKick;
+    int m_score=0;
 private:
     sf::Sprite m_sprite;
     SheetToBeAnimated PlayerSheet;
@@ -48,13 +49,17 @@ private:
     bool m_isInvincible;
     bool m_daching;
     bool m_Shooting;
+    bool m_Attacking;
     const float m_dashCooldown;
     const float m_dashTime;
     const float m_firerate;
+    const float m_meleerate;
     const float m_invincibility;
     const float KBTime;
     sf::Clock m_clockFire;
     sf::Time m_elapsedTimeFire;
+    sf::Clock m_clockMelee;
+    sf::Time m_elapsedTimeMelee;
     sf::Clock m_clockHit;
     sf::Time m_elapsedTimeHit;
     sf::Clock m_clockDashCooldown;

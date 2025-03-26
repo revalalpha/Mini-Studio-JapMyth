@@ -17,7 +17,7 @@ float getPlayerShipMaxVelocity() { return 650.f; }
 PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
     , PlayerSheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("Shinigami personnage principale.png"))
-    , m_HP(10)
+    , m_HP(20)
     , m_MaxHP(m_HP)
     , m_angle(-90.f * 3.14 / 180)
 	, m_mouseAngle(0.f)
@@ -37,23 +37,37 @@ PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     , m_dashTime(0.3f)
     , isKick(false)
     , KBTime(0.5f)
+	, m_meleerate(0.5f)
+	, m_Attacking(false)
 	, m_view(sf::Vector2f(m_position.x, m_position.y), sf::Vector2f(1920, 1080))
 
 {
     m_sprite = PlayerSheet.Animation(1.f / 60.f, 1, 1, 1, 0.f, true);
-    m_view.zoom(0.7f);
+    m_view.zoom(0.8f);
 }
 void PlayerShip::handleInputs(const sf::Event& event)
 {
     m_elapsedTimeFire =m_clockFire.getElapsedTime();
     
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         if (m_elapsedTimeFire.asSeconds() >= m_firerate)
         {
             m_Shooting = true;
             m_clockFire.restart();
+        }
+
+    }
+    m_elapsedTimeMelee = m_clockMelee.getElapsedTime();
+
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        if (m_elapsedTimeMelee.asSeconds() >= m_meleerate)
+        {
+            m_Attacking = true;
+            m_clockMelee.restart();
         }
 
     }
@@ -80,7 +94,7 @@ void PlayerShip::handleInputs(const sf::Event& event)
 
 void PlayerShip::update(float deltaTime)
 {
-    decelerating={ 0.f, 0.f };
+
     acceleration={ 0.f, 0.f };
     if (m_Shooting)
     {
@@ -113,6 +127,48 @@ void PlayerShip::update(float deltaTime)
 
         }
     }
+
+    if (m_Attacking)
+    {
+        m_Attacking = false;
+
+        if (m_mouseAngle / 3.14159265f * 180.f < -160.f || m_mouseAngle / 3.14159265f * 180.f > 160.f)
+        {
+
+            PlayerSheet.interruptAnimation();
+            m_sprite = PlayerSheet.Animation(1.f / 60.f, 7, 1, 3, 0.2f, true);
+            new OrbitalProjectile(m_owner, this, -160.f, 40.f, -7.f, 65, 120.f, 20.f, PLAYERmelee_TYPE);
+        }
+        if (m_mouseAngle / 3.14159265f * 180.f < -20.f && m_mouseAngle / 3.14159265f * 180.f > -160.f)
+        {
+            PlayerSheet.interruptAnimation();
+            m_sprite = PlayerSheet.Animation(1.f / 60.f, 6, 1, 3, 0.2f, true);
+            new OrbitalProjectile(m_owner, this, -60.f, 40.f, -7.f, 65, 120.f, 20.f, PLAYERmelee_TYPE);
+        }
+        if (m_mouseAngle / 3.14159265f * 180.f < 160.f && m_mouseAngle / 3.14159265f * 180.f > 20.f)
+        {
+            PlayerSheet.interruptAnimation();
+            m_sprite = PlayerSheet.Animation(1.f / 60.f, 5, 1, 3, 0.2f, true);
+            new OrbitalProjectile(m_owner, this, 120.f, 40.f, -7.f, 65, 120.f, 20.f, PLAYERmelee_TYPE);
+        }
+
+        if (m_mouseAngle / 3.14159265f * 180.f < 20.f && m_mouseAngle / 3.14159265f * 180.f > -20.f)
+        {
+            PlayerSheet.interruptAnimation();
+            m_sprite = PlayerSheet.Animation(1.f / 60.f, 8, 1, 3, 0.2f, true);
+            new OrbitalProjectile(m_owner, this, -60.f, 40.f, 7.f, 65, 120.f, 20.f, PLAYERmelee_TYPE);
+        }
+    }
+
+
+
+  
+	
+    
+
+    if (!m_isAccelerating|| !m_isDecelerating|| !m_isTurningLeft ||! m_isTurningRight)
+        acceleration = -getPlayerShipFluidFrictionCoef() * m_velocity;
+
     if (m_daching)
     {
         m_elapsedTimeDashTime = m_clockDashTime.getElapsedTime();
@@ -123,33 +179,22 @@ void PlayerShip::update(float deltaTime)
             m_daching = false;
             m_clockDashTime.restart();
         }
-        
-        
-        acceleration += 5000 * Vec2 { std::cos(m_angle), std::sin(m_angle) };
+
+
+        acceleration += 7000 * Vec2{ std::cos(m_mouseAngle), std::sin(m_mouseAngle) };
 
     }
-    if (isKick)
+    if (m_isInvincible)
     {
-        m_elapsedKBTime = m_clockKBTime.getElapsedTime();
+        m_elapsedTimeHit = m_clockHit.getElapsedTime();
 
-        if (m_elapsedKBTime.asSeconds() >= KBTime)
+        if (m_elapsedTimeHit.asSeconds() >= m_isInvincible)
         {
 
-            isKick = false;
-            m_clockKBTime.restart();
+            m_isInvincible = false;
+            m_clockHit.restart();
         }
-
-
-        m_velocity -= 170 * Vec2{ std::cos(m_angle), std::sin(m_angle) };
-
     }
-  
-	
-    
-
-    if (!m_isAccelerating|| !m_isDecelerating|| !m_isTurningLeft ||! m_isTurningRight)
-        acceleration = -getPlayerShipFluidFrictionCoef() * m_velocity;
-
 
     if (m_isTurningRight && m_isAccelerating)
     {
@@ -176,12 +221,12 @@ void PlayerShip::update(float deltaTime)
     else if (m_isTurningLeft)
     {
         acceleration += getPlayerShipThrust() * Vec2 { std::cos((m_angle - (90.f * 3.14f / 180.f))), 0 };
-        m_sprite = PlayerSheet.Animation(deltaTime, 3, 2, 3, 0.1f, true);
+        m_sprite = PlayerSheet.Animation(deltaTime, 3, 1, 3, 0.1f, true);
     }
     else if (m_isTurningRight)
     {
         acceleration -= getPlayerShipThrust() * Vec2 { std::cos((m_angle - (90.f * 3.14f / 180.f))), 0 };
-        m_sprite = PlayerSheet.Animation(deltaTime, 4, 2, 3, 0.1f, true);
+        m_sprite = PlayerSheet.Animation(deltaTime, 4, 1, 3, 0.1f, true);
     }
     else if (m_isAccelerating)
     {
@@ -205,19 +250,20 @@ void PlayerShip::update(float deltaTime)
         m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
     else if (m_position.y < 360)
         m_position = { PreviousPos.x ,PreviousPos.y + 0.5f };
-    //else if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 550.f) && m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f)&& m_position.x >(m_owner.getGame().getWindowSize().y / 2.f - 450.f) && m_position.x < (m_owner.getGame().getWindowSize().y / 2.f + 450.f))
-    //{
-	   // 
-    //    
-    //    if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 550.f))
-    //        m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
-    //    else if (m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f))
-    //        m_position = { PreviousPos.x  ,PreviousPos.y + 0.5f };
-    //    if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 450.f))
-    //        m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
-    //    else if (m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 450.f))
-    //        m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
-    //}
+
+    else if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 490.f)&& m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 490.f)&& m_position.y >(m_owner.getGame().getWindowSize().y / 2.f - 650.f)&& m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f))
+    {
+	    
+        
+        if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 650.f)&& m_position.y < (m_owner.getGame().getWindowSize().y / 2.f - 640.f))
+            m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
+        if (m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f)&& m_position.y > (m_owner.getGame().getWindowSize().y / 2.f + 540.f))
+            m_position = { PreviousPos.x  ,PreviousPos.y + 0.5f };
+        if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 490.f)&& m_position.x < (m_owner.getGame().getWindowSize().x / 2.f - 480.f))
+            m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
+        if (m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 490.f)&& m_position.x > (m_owner.getGame().getWindowSize().x / 2.f + 480.f))
+            m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
+    }
     else
 		m_position += m_velocity * deltaTime;
 
@@ -232,10 +278,15 @@ void PlayerShip::render(sf::RenderWindow& window)
 {
 
     m_sprite.setColor(sf::Color(255, 255, 255, 255));
-    if (m_daching || m_isInvincible)
+    if (m_daching )
     {
 	    m_sprite.setColor(sf::Color(50, 50, 50, 128));
-    	m_isInvincible = false;
+    	
+    }
+    if (m_isInvincible)
+    {
+        m_sprite.setColor(sf::Color(128, 50, 50, 128));
+
     }
 
     m_sprite.setScale(0.25f, 0.25f);
@@ -245,15 +296,20 @@ void PlayerShip::render(sf::RenderWindow& window)
     
     sf::Text HP("HP : "+std::to_string(m_HP)+" / "+ std::to_string(m_MaxHP),m_owner.getGame().font,20);
     HP.setPosition(m_position.x-500, m_position.y - 300);
+
+    sf::Text Score("Score : " + std::to_string(m_score) , m_owner.getGame().font, 20);
+    Score.setPosition(m_position.x + 500, m_position.y + 300);
+
     window.draw(m_sprite);
     window.draw(HP);
+    window.draw(Score);
     window.setView(m_view);
     sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 
     sf::Vector2f mousePos = window.mapPixelToCoords(pixelPos);
     m_mouseAngle = atan2( mousePos.y - m_position.y,  mousePos.x - m_position.x);
 
-
+    
     
 }
 
@@ -281,6 +337,7 @@ void PlayerShip::takeDamage(int dmg)
     if (m_elapsedTimeHit.asSeconds() >= m_invincibility&&!m_daching)
     {
         m_isInvincible = true;
+        m_clockDashTime.restart();
         m_HP -= dmg;
         if (m_HP <= 0)
             die();

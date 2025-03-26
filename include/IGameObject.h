@@ -12,15 +12,17 @@ class Game;
 enum GameObjectType
 {
 
-	  ENEMY_TYPE = 0
-	, PLAYERprojectile_TYPE = 1
-	, ENEMYprojectile_TYPE = 2
-    , PLAYERmelee_TYPE = 3
-    , ENEMYmelee_TYPE = 4
-	, BARRIER_TYPE = 5
-	, PLAYERSHIP_TYPE = 6
-	, INVICIBLE_TYPE = 7
-    , ENEMYKick_TYPE=8
+	 PLAYERprojectile_TYPE = 0
+	, ENEMYprojectile_TYPE = 1
+    , PLAYERmelee_TYPE = 2
+    , ENEMYmelee_TYPE = 3
+	, BARRIER_TYPE = 4
+	, PLAYERSHIP_TYPE = 5
+	, INVICIBLE_TYPE = 6
+    , SAMURAI_TYPE=7
+    , KAPPA_TYPE=8
+    , INUGAMI_TYPE=9
+
 
 };
 

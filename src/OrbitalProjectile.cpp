@@ -2,6 +2,8 @@
 #include "OrbitalProjectile.h"
 
 #include "Game.h"
+#include "Inugami.h"
+#include "Kappa.h"
 #include "PlayerShip.h"
 #include "Samurai.h"
 
@@ -152,8 +154,12 @@ Vec2 OrbitalProjectile::getOwnerPosition() const
     {
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getPositon();
-    case ENEMY_TYPE:
+    case SAMURAI_TYPE:
         return static_cast<Samurai*>(m_owner)->getPosition();
+    case KAPPA_TYPE:
+        return static_cast<Kappa*>(m_owner)->getPosition();
+    case INUGAMI_TYPE:
+        return static_cast<Inugami*>(m_owner)->getPosition();
     default:
         OBB ownersOBB = m_owner->getBoundingBox();
         return ownersOBB.center;
@@ -169,8 +175,12 @@ bool OrbitalProjectile::IsOwnerDead() const
     {
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getHP() <=0;
-    case ENEMY_TYPE:
+    case SAMURAI_TYPE:
         return static_cast<Samurai*>(m_owner)->getHP() <= 0;
+    case KAPPA_TYPE:
+        return static_cast<Kappa*>(m_owner)->getHP() <= 0;
+    case INUGAMI_TYPE:
+        return static_cast<Inugami*>(m_owner)->getHP() <= 0;
     default:
         return true;
     }

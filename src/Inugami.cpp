@@ -1,52 +1,44 @@
-#include "Samurai.h"
+#include "Inugami.h"
 
-#include "SamuraiBehavior.h"
+#include "InugamiBehavior.h"
 #include "Fireball.h"
 #include "Game.h"
 #include "OrbitalProjectile.h"
 
 
-int getPistolBulletSpeed() { return 300; }
-int getShotGunBulletSpeed() { return 220; }
-float getBossFluidFrictionCoef() { return 5.0f; }
 
-Vec2 getBossSize()
+float getInugamiFluidFrictionCoef() { return 5.0f; }
+
+Vec2 getInugamiSize()
 {
     return { 60.f, 60.f };
 }
 
-Vec2 getVelo() { return { 32.f, 32.f }; }
+Vec2 getInugamiVelo() { return { 32.f, 32.f }; }
 
-Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
+Inugami::Inugami(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
     , m_position(position)
-	,m_rootNode1(this)
-	, EnemySheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("samurai.png"))
+	,m_rootNode(this)
+	, EnemySheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("inugami.png"))
 
 {
 
     //m_sprite = EnemySheet.testt();
     
     //m_sprite.setTexture(getOwner().getGame().getTextureCache().getTexture("Shinigami personnage principale.png"));
-    auto* behavior = new BT::Retry(&m_rootNode1);
+    auto* behavior = new BT::Retry(&m_rootNode);
 
 
     
     auto* Melee = new BT::PlayerDictance(behavior, 0.f, 100.f);
-    auto* Kunai = new BT::PlayerDictance(behavior, 400.f, 600.f);
-    new BT::Walk(behavior);
+    new BT::Sprint(behavior);
 
 
     auto* MeleeSequence = new BT::Sequence(Melee);
-    new BT::Idle(MeleeSequence);
-    new BT::Wait(MeleeSequence, 0.2f);
+    new BT::Walk(MeleeSequence);
     new BT::Melee(MeleeSequence);
-    new BT::Wait(MeleeSequence,1.2f);
-
-    new BT::Walk(behavior);
-    auto* DistanceSequence = new BT::Sequence(Kunai);
-    new BT::FirePistol(DistanceSequence);
-    new BT::Wait(DistanceSequence, 0.7f);
+    new BT::Wait(MeleeSequence,1.f);
 
     auto* dead = new BT::IsDead(behavior);
     auto* death = new BT::Retry(dead);
@@ -57,11 +49,11 @@ Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
     
 }
 
-Vec2 Samurai::getDistanceToPlayer() const
+Vec2 Inugami::getDistanceToPlayer() const
 {
     return m_currentTarget->getPositon() - m_position;
 }
-float Samurai::calculateAngleToTarget() const
+float Inugami::calculateAngleToTarget() const
 {
     if (!m_currentTarget)
         return m_angle;
@@ -71,7 +63,7 @@ float Samurai::calculateAngleToTarget() const
     return std::atan2(directionToPlayer.y, directionToPlayer.x);
 }
 
-bool Samurai::findValidTarget()
+bool Inugami::findValidTarget()
 {
     
 
@@ -90,54 +82,22 @@ bool Samurai::findValidTarget()
 
 }
 
-bool Samurai::isCurrentTargetValid() const
+bool Inugami::isCurrentTargetValid() const
 {
     if (m_currentTarget->getHP() <= 0)
         return false;
 
     return true;
 }
-void Samurai::setSpeed(const int& Speed)
+void Inugami::setSpeed(const int& Speed)
 {
     m_speed = Speed;
 }
 
-void Samurai::fireWithPistol()
-{
-    
-    new Fireball(m_owner,this, m_position, Vec2{ getPistolBulletSpeed() * std::cos(m_angle) ,  getPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"kunai.png",{0.12f,0.12f});
-
-    if (m_angle / 3.14159265f * 180.f < -160.f || m_angle / 3.14159265f * 180.f > 160.f)
-    {
-
-        EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 11, 1, 3, 0.2f, true);
-        
-    }
-    if (m_angle / 3.14159265f * 180.f < -20.f && m_angle / 3.14159265f * 180.f > -160.f)
-    {
-        EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 13, 1, 3, 0.2f, true);
-        
-    }
-    if (m_angle / 3.14159265f * 180.f < 160.f && m_angle / 3.14159265f * 180.f > 20.f)
-    {
-        EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 12, 1, 3, 0.2f, true);
-       
-    }
-
-    if (m_angle / 3.14159265f * 180.f < 20.f && m_angle / 3.14159265f * 180.f > -20.f)
-    {
-        EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 10, 1, 3, 0.2f, true);
-        
-    }
-
-}
 
 
-void Samurai::RightMelee()
+
+void Inugami::RightMelee()
 {
 
     
@@ -147,50 +107,50 @@ void Samurai::RightMelee()
     {
 
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f/60.f, 6, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f/60.f, 8, 1, 3, 0.2f, true);
         new OrbitalProjectile(m_owner, this, -160.f, 40.f, -7.f, 65, 80.f, 20.f, ENEMYmelee_TYPE);
     }
     if (m_angle / 3.14159265f * 180.f < -20.f && m_angle / 3.14159265f * 180.f > -160.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 8, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 6, 1, 3, 0.2f, true);
         new OrbitalProjectile(m_owner, this, -60.f, 40.f, -7.f, 65, 80.f, 20.f, ENEMYmelee_TYPE);
     }
     if (m_angle / 3.14159265f * 180.f < 160.f && m_angle / 3.14159265f * 180.f > 20.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 7, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 5, 1, 3, 0.2f, true);
         new OrbitalProjectile(m_owner, this, 120.f, 40.f, -7.f, 65, 80.f, 20.f, ENEMYmelee_TYPE);
     }
 
     if (m_angle / 3.14159265f * 180.f < 20.f && m_angle / 3.14159265f * 180.f > -20.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 5, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 7, 1, 3, 0.2f, true);
         new OrbitalProjectile(m_owner, this, -60.f, 40.f, 7.f, 65, 80.f, 20.f, ENEMYmelee_TYPE);
     }
 }
 
 
-Vec2 Samurai::getPosition() const
+Vec2 Inugami::getPosition() const
 {
     return m_position;
 }
 
 
 
-void Samurai::handleInputs(const sf::Event& event)
+void Inugami::handleInputs(const sf::Event& event)
 {
     
 }
 
-void Samurai::update(float deltaTime)
+void Inugami::update(float deltaTime)
 {
 
 
     m_allGameObjects = getOwner().getAllGameOjects();
     findValidTarget();
-    m_rootNode1.tick();
+    m_rootNode.tick();
 
 	m_angle = calculateAngleToTarget();
 
@@ -198,7 +158,7 @@ void Samurai::update(float deltaTime)
 
     if (m_angle / 3.14159265f * 180.f < -160.f || m_angle / 3.14159265f * 180.f > 160.f && m_velocity != Vec2{ 0.f,0.f })
     {
-        m_sprite = EnemySheet.Animation(deltaTime, 3, 2, 3, 0.1f, true);
+        m_sprite = EnemySheet.Animation(deltaTime, 4, 2, 3, 0.1f, true);
     }
     if (m_angle / 3.14159265f * 180.f < -20.f && m_angle / 3.14159265f * 180.f > -160.f && m_velocity != Vec2{ 0.f,0.f })
     {
@@ -212,7 +172,7 @@ void Samurai::update(float deltaTime)
     
     if (m_angle / 3.14159265f * 180.f < 20.f && m_angle / 3.14159265f * 180.f > -20.f && m_velocity != Vec2{ 0.f,0.f })
     {
-	    m_sprite = EnemySheet.Animation(deltaTime, 4, 2, 3, 0.1f, true);
+	    m_sprite = EnemySheet.Animation(deltaTime, 3, 2, 3, 0.1f, true);
     }
 
 
@@ -234,7 +194,7 @@ void Samurai::update(float deltaTime)
     Vec2 acceleration{ 0.f, 0.f };
 
     if (m_speed==0)
-        acceleration = -getBossFluidFrictionCoef() * m_velocity;
+        acceleration = -getInugamiFluidFrictionCoef() * m_velocity;
 
     if (m_speed>0)
 		acceleration += m_speed * Vec2 { std::cos(m_angle), std::sin(m_angle) };
@@ -309,7 +269,7 @@ void Samurai::update(float deltaTime)
 
 }
 
-void Samurai::render(sf::RenderWindow& window)
+void Inugami::render(sf::RenderWindow& window)
 {
     m_sprite.setColor(sf::Color(255, 255, 255, 255));
     if (m_isInvincible)
@@ -329,9 +289,9 @@ void Samurai::render(sf::RenderWindow& window)
     //window.draw(HP);
 }
 
-OBB Samurai::getBoundingBox() const
+OBB Inugami::getBoundingBox() const
 {
-    Vec2 size = getBossSize();
+    Vec2 size = getInugamiSize();
     return {
         m_position,
         size / 2.0f,
@@ -339,13 +299,13 @@ OBB Samurai::getBoundingBox() const
     };
 }
 
-GameObjectType Samurai::gameObjectType()
+GameObjectType Inugami::gameObjectType()
 {
-    return SAMURAI_TYPE;
+    return INUGAMI_TYPE;
 }
 
 
-void Samurai::takeDamage(int dmg)
+void Inugami::takeDamage(int dmg)
 {
     m_elapsedTimeHit = m_clockHit.getElapsedTime();
 
@@ -361,7 +321,7 @@ void Samurai::takeDamage(int dmg)
 
 }
 
-void Samurai::die()
+void Inugami::die()
 {
     if (m_isDead)
         return;
@@ -372,16 +332,16 @@ void Samurai::die()
 	
 }
 
-int Samurai::getHP() const
+int Inugami::getHP() const
 {
     return m_HP;
 }
-int Samurai::getMaxHP()const
+int Inugami::getMaxHP()const
 {
     return m_MaxHP;
 }
 
-float Samurai::getAngle()const
+float Inugami::getAngle()const
 {
     return m_angle;
 }

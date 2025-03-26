@@ -1,6 +1,8 @@
 #include "Fireball.h"
 
 #include "Game.h"
+#include "Inugami.h"
+#include "Kappa.h"
 #include "PlayerShip.h"
 #include "Samurai.h"
 
@@ -74,8 +76,12 @@ float Fireball::getOwnerAngle() const
     {
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getAngle();
-    case ENEMY_TYPE:
+    case SAMURAI_TYPE:
         return static_cast<Samurai*>(m_owner)->getAngle();
+    case KAPPA_TYPE:
+        return static_cast<Kappa*>(m_owner)->getAngle();
+    case INUGAMI_TYPE:
+        return static_cast<Inugami*>(m_owner)->getAngle();
     default:
         return 0.f;
     }
@@ -90,8 +96,12 @@ bool Fireball::IsOwnerDead() const
     {
     case PLAYERSHIP_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getHP() <= 0;
-    case ENEMY_TYPE:
+    case SAMURAI_TYPE:
         return static_cast<Samurai*>(m_owner)->getHP() <= 0;
+    case KAPPA_TYPE:
+        return static_cast<Kappa*>(m_owner)->getHP() <= 0;
+    case INUGAMI_TYPE:
+        return static_cast<Inugami*>(m_owner)->getHP() <= 0;
     default:
         return true;
     }

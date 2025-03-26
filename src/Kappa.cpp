@@ -1,52 +1,52 @@
-#include "Samurai.h"
+#include "Kappa.h"
 
-#include "SamuraiBehavior.h"
+#include "KappaBehavior.h"
 #include "Fireball.h"
 #include "Game.h"
 #include "OrbitalProjectile.h"
 
 
-int getPistolBulletSpeed() { return 300; }
-int getShotGunBulletSpeed() { return 220; }
-float getBossFluidFrictionCoef() { return 5.0f; }
+int getKappaPistolBulletSpeed() { return 400; }
+float getKappaFluidFrictionCoef() { return 5.0f; }
 
-Vec2 getBossSize()
+Vec2 getKappaSize()
 {
     return { 60.f, 60.f };
 }
 
-Vec2 getVelo() { return { 32.f, 32.f }; }
+Vec2 getKappaVelo() { return { 32.f, 32.f }; }
 
-Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
+Kappa::Kappa(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
     , m_position(position)
-	,m_rootNode1(this)
-	, EnemySheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("samurai.png"))
+	,m_rootNode(this)
+	, EnemySheet(512.f, 512.f, getOwner().getGame().getTextureCache().getTexture("kappa.png"))
 
 {
 
     //m_sprite = EnemySheet.testt();
     
     //m_sprite.setTexture(getOwner().getGame().getTextureCache().getTexture("Shinigami personnage principale.png"));
-    auto* behavior = new BT::Retry(&m_rootNode1);
+    auto* behavior = new BT::Retry(&m_rootNode);
 
 
     
-    auto* Melee = new BT::PlayerDictance(behavior, 0.f, 100.f);
-    auto* Kunai = new BT::PlayerDictance(behavior, 400.f, 600.f);
-    new BT::Walk(behavior);
+    auto* run_away = new BT::PlayerDictance(behavior, 0.f, 500.f);
+    auto* Shoot = new BT::PlayerDictance(behavior, 510.f, 800.f);
+    auto* come_towards = new BT::PlayerDictance(behavior, 810.f, 10000.f);
 
 
-    auto* MeleeSequence = new BT::Sequence(Melee);
-    new BT::Idle(MeleeSequence);
-    new BT::Wait(MeleeSequence, 0.2f);
-    new BT::Melee(MeleeSequence);
-    new BT::Wait(MeleeSequence,1.2f);
+    new BT::Walk(come_towards);
 
-    new BT::Walk(behavior);
-    auto* DistanceSequence = new BT::Sequence(Kunai);
-    new BT::FirePistol(DistanceSequence);
-    new BT::Wait(DistanceSequence, 0.7f);
+    auto* DistanceSequence = new BT::Sequence(Shoot);
+    new BT::Idle(DistanceSequence);
+    new BT::Wait(DistanceSequence, 0.3f);
+    new BT::FireKappa(DistanceSequence);
+    new BT::Wait(DistanceSequence, 2.f);
+
+
+
+    new BT::OppositeWalk(run_away);
 
     auto* dead = new BT::IsDead(behavior);
     auto* death = new BT::Retry(dead);
@@ -57,11 +57,11 @@ Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
     
 }
 
-Vec2 Samurai::getDistanceToPlayer() const
+Vec2 Kappa::getDistanceToPlayer() const
 {
     return m_currentTarget->getPositon() - m_position;
 }
-float Samurai::calculateAngleToTarget() const
+float Kappa::calculateAngleToTarget() const
 {
     if (!m_currentTarget)
         return m_angle;
@@ -71,7 +71,7 @@ float Samurai::calculateAngleToTarget() const
     return std::atan2(directionToPlayer.y, directionToPlayer.x);
 }
 
-bool Samurai::findValidTarget()
+bool Kappa::findValidTarget()
 {
     
 
@@ -90,54 +90,54 @@ bool Samurai::findValidTarget()
 
 }
 
-bool Samurai::isCurrentTargetValid() const
+bool Kappa::isCurrentTargetValid() const
 {
     if (m_currentTarget->getHP() <= 0)
         return false;
 
     return true;
 }
-void Samurai::setSpeed(const int& Speed)
+void Kappa::setSpeed(const int& Speed)
 {
     m_speed = Speed;
 }
 
-void Samurai::fireWithPistol()
+void Kappa::fireWithPistol()
 {
     
-    new Fireball(m_owner,this, m_position, Vec2{ getPistolBulletSpeed() * std::cos(m_angle) ,  getPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"kunai.png",{0.12f,0.12f});
+    new Fireball(m_owner,this, m_position, Vec2{ getKappaPistolBulletSpeed() * std::cos(m_angle) ,  getKappaPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"bubble.png",{0.12f,0.12f});
 
     if (m_angle / 3.14159265f * 180.f < -160.f || m_angle / 3.14159265f * 180.f > 160.f)
     {
 
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 11, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 7, 1, 3, 0.2f, true);
         
     }
     if (m_angle / 3.14159265f * 180.f < -20.f && m_angle / 3.14159265f * 180.f > -160.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 13, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 9, 1, 3, 0.2f, true);
         
     }
     if (m_angle / 3.14159265f * 180.f < 160.f && m_angle / 3.14159265f * 180.f > 20.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 12, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 8, 1, 3, 0.2f, true);
        
     }
 
     if (m_angle / 3.14159265f * 180.f < 20.f && m_angle / 3.14159265f * 180.f > -20.f)
     {
         EnemySheet.interruptAnimation();
-        m_sprite = EnemySheet.Animation(1.f / 60.f, 10, 1, 3, 0.2f, true);
+        m_sprite = EnemySheet.Animation(1.f / 60.f, 6, 1, 3, 0.2f, true);
         
     }
 
 }
 
 
-void Samurai::RightMelee()
+void Kappa::RightMelee()
 {
 
     
@@ -172,25 +172,25 @@ void Samurai::RightMelee()
 }
 
 
-Vec2 Samurai::getPosition() const
+Vec2 Kappa::getPosition() const
 {
     return m_position;
 }
 
 
 
-void Samurai::handleInputs(const sf::Event& event)
+void Kappa::handleInputs(const sf::Event& event)
 {
     
 }
 
-void Samurai::update(float deltaTime)
+void Kappa::update(float deltaTime)
 {
 
 
     m_allGameObjects = getOwner().getAllGameOjects();
     findValidTarget();
-    m_rootNode1.tick();
+    m_rootNode.tick();
 
 	m_angle = calculateAngleToTarget();
 
@@ -234,11 +234,12 @@ void Samurai::update(float deltaTime)
     Vec2 acceleration{ 0.f, 0.f };
 
     if (m_speed==0)
-        acceleration = -getBossFluidFrictionCoef() * m_velocity;
+        acceleration = -getKappaFluidFrictionCoef() * m_velocity;
 
     if (m_speed>0)
 		acceleration += m_speed * Vec2 { std::cos(m_angle), std::sin(m_angle) };
-
+    if (m_speed < 0)
+        acceleration += m_speed * Vec2{ std::cos(m_angle), std::sin(m_angle) };
 
     Vec2 PreviousPos = m_position;
     if (m_position.x > m_owner.getGame().getWindowSize().x - 300.f)
@@ -303,13 +304,13 @@ void Samurai::update(float deltaTime)
             destroy();
             m_clockdeath.restart();
         }
-        m_sprite = EnemySheet.Animation(deltaTime, 9, 1, 3, 0.33f, true);
+        m_sprite = EnemySheet.Animation(deltaTime, 5, 1, 3, 0.33f, true);
         m_velocity = { 0.f,0.f };
     }
 
 }
 
-void Samurai::render(sf::RenderWindow& window)
+void Kappa::render(sf::RenderWindow& window)
 {
     m_sprite.setColor(sf::Color(255, 255, 255, 255));
     if (m_isInvincible)
@@ -329,9 +330,9 @@ void Samurai::render(sf::RenderWindow& window)
     //window.draw(HP);
 }
 
-OBB Samurai::getBoundingBox() const
+OBB Kappa::getBoundingBox() const
 {
-    Vec2 size = getBossSize();
+    Vec2 size = getKappaSize();
     return {
         m_position,
         size / 2.0f,
@@ -339,13 +340,13 @@ OBB Samurai::getBoundingBox() const
     };
 }
 
-GameObjectType Samurai::gameObjectType()
+GameObjectType Kappa::gameObjectType()
 {
-    return SAMURAI_TYPE;
+    return KAPPA_TYPE;
 }
 
 
-void Samurai::takeDamage(int dmg)
+void Kappa::takeDamage(int dmg)
 {
     m_elapsedTimeHit = m_clockHit.getElapsedTime();
 
@@ -361,7 +362,7 @@ void Samurai::takeDamage(int dmg)
 
 }
 
-void Samurai::die()
+void Kappa::die()
 {
     if (m_isDead)
         return;
@@ -372,16 +373,16 @@ void Samurai::die()
 	
 }
 
-int Samurai::getHP() const
+int Kappa::getHP() const
 {
     return m_HP;
 }
-int Samurai::getMaxHP()const
+int Kappa::getMaxHP()const
 {
     return m_MaxHP;
 }
 
-float Samurai::getAngle()const
+float Kappa::getAngle()const
 {
     return m_angle;
 }
