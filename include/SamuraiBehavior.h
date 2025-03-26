@@ -10,7 +10,7 @@
 namespace BT
 {
 
-    class Wait : public IActionNode
+    class WaitSamurai : public IActionNode
     {
     private:
         sf::Time m_duration;
@@ -18,7 +18,7 @@ namespace BT
         bool m_started = false;
 
     public:
-        Wait(ICompositeNode* parent, float duration)
+        WaitSamurai(ICompositeNode* parent, float duration)
             : IActionNode(parent), m_duration(sf::seconds(duration)) {}
 
         Status tick() override
@@ -45,10 +45,10 @@ namespace BT
         }
     };
 
-    class Walk : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class WalkSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        Walk(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        WalkSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -62,10 +62,10 @@ namespace BT
 
     };
 
-    class Sprint : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class SprintSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        Sprint(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        SprintSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -78,10 +78,10 @@ namespace BT
 
 
     };
-    class Idle : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class IdleSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        Idle(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        IdleSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -95,10 +95,10 @@ namespace BT
 
     };
 
-    class IsPlayerDead : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class IsPlayerDeadSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        IsPlayerDead(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        IsPlayerDeadSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -116,10 +116,10 @@ namespace BT
 
 
 
-    class FirePistol : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class FireSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        FirePistol(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        FireSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -145,10 +145,10 @@ namespace BT
 
 
 
-    class Melee : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class MeleeSamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        Melee(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        MeleeSamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -176,10 +176,10 @@ namespace BT
 
 
 
-    class FindEnemy : public BehaviorNodeDecorator<Samurai, IActionNode>
+    class FindEnemySamurai : public BehaviorNodeDecorator<Samurai, IActionNode>
     {
     public:
-        FindEnemy(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
+        FindEnemySamurai(ICompositeNode* parent) : BehaviorNodeDecorator<Samurai, IActionNode>(parent)
         {
         }
 
@@ -196,10 +196,10 @@ namespace BT
             return Success;
         }
     };
-	class PlayerDictance : public BehaviorNodeDecorator<Samurai, IConditionalNode>
+	class PlayerDictanceSamurai : public BehaviorNodeDecorator<Samurai, IConditionalNode>
     {
     public:
-        PlayerDictance(ICompositeNode* node,float min, float max)
+        PlayerDictanceSamurai(ICompositeNode* node,float min, float max)
             : BehaviorNodeDecorator<Samurai, IConditionalNode>(node)
 			,m_min(min)
 			,m_max(max)
@@ -218,10 +218,10 @@ namespace BT
         float m_max;
         
     };
-    class IsDead : public BehaviorNodeDecorator<Samurai, IConditionalNode>
+    class IsDeadSamurai : public BehaviorNodeDecorator<Samurai, IConditionalNode>
     {
     public:
-        IsDead(ICompositeNode* node)
+        IsDeadSamurai(ICompositeNode* node)
             : BehaviorNodeDecorator<Samurai, IConditionalNode>(node)
 
 
@@ -239,22 +239,7 @@ namespace BT
 
 
     };
-    class SecondPhase : public BehaviorNodeDecorator<Samurai, IConditionalNode>
-    {
-    public:
-        SecondPhase(ICompositeNode* node)
-            : BehaviorNodeDecorator<Samurai, IConditionalNode>(node)
-        {
-        }
 
-        bool condition()
-        {
-
-            return getGameObject()->getHP() <= getGameObject()->getMaxHP() / 2;
-        }
-
-
-    };
 
 
 }

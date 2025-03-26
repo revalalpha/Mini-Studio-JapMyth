@@ -153,6 +153,7 @@ Vec2 OrbitalProjectile::getOwnerPosition() const
     switch (m_owner->gameObjectType())
     {
     case PLAYERSHIP_TYPE:
+    case INVICIBLE_TYPE:
         return static_cast<PlayerShip*>(m_owner)->getPositon();
     case SAMURAI_TYPE:
         return static_cast<Samurai*>(m_owner)->getPosition();

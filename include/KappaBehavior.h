@@ -10,7 +10,7 @@
 namespace BT
 {
 
-    class Wait : public IActionNode
+    class WaitKappa : public IActionNode
     {
     private:
         sf::Time m_duration;
@@ -18,7 +18,7 @@ namespace BT
         bool m_started = false;
 
     public:
-        Wait(ICompositeNode* parent, float duration)
+        WaitKappa(ICompositeNode* parent, float duration)
             : IActionNode(parent), m_duration(sf::seconds(duration)) {}
 
         Status tick() override
@@ -45,10 +45,10 @@ namespace BT
         }
     };
 
-    class Walk : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class WalkKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        Walk(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        WalkKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -62,10 +62,10 @@ namespace BT
 
     };
 
-    class OppositeWalk : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class OppositeWalkKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        OppositeWalk(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        OppositeWalkKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -79,10 +79,10 @@ namespace BT
 
     };
 
-    class Sprint : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class SprintKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        Sprint(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        SprintKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -95,10 +95,10 @@ namespace BT
 
 
     };
-    class Idle : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class IdleKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        Idle(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        IdleKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -112,10 +112,10 @@ namespace BT
 
     };
 
-    class IsPlayerDead : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class IsPlayerDeadKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        IsPlayerDead(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        IsPlayerDeadKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -164,10 +164,10 @@ namespace BT
 
 
 
-    class FindEnemy : public BehaviorNodeDecorator<Kappa, IActionNode>
+    class FindEnemyKappa : public BehaviorNodeDecorator<Kappa, IActionNode>
     {
     public:
-        FindEnemy(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
+        FindEnemyKappa(ICompositeNode* parent) : BehaviorNodeDecorator<Kappa, IActionNode>(parent)
         {
         }
 
@@ -184,10 +184,10 @@ namespace BT
             return Success;
         }
     };
-	class PlayerDictance : public BehaviorNodeDecorator<Kappa, IConditionalNode>
+	class PlayerDictanceKappa : public BehaviorNodeDecorator<Kappa, IConditionalNode>
     {
     public:
-        PlayerDictance(ICompositeNode* node,float min, float max)
+        PlayerDictanceKappa(ICompositeNode* node,float min, float max)
             : BehaviorNodeDecorator<Kappa, IConditionalNode>(node)
 			,m_min(min)
 			,m_max(max)
@@ -206,10 +206,10 @@ namespace BT
         float m_max;
         
     };
-    class IsDead : public BehaviorNodeDecorator<Kappa, IConditionalNode>
+    class IsDeadKappa : public BehaviorNodeDecorator<Kappa, IConditionalNode>
     {
     public:
-        IsDead(ICompositeNode* node)
+        IsDeadKappa(ICompositeNode* node)
             : BehaviorNodeDecorator<Kappa, IConditionalNode>(node)
 
 
@@ -227,22 +227,7 @@ namespace BT
 
 
     };
-    class SecondPhase : public BehaviorNodeDecorator<Kappa, IConditionalNode>
-    {
-    public:
-        SecondPhase(ICompositeNode* node)
-            : BehaviorNodeDecorator<Kappa, IConditionalNode>(node)
-        {
-        }
 
-        bool condition()
-        {
-
-            return getGameObject()->getHP() <= getGameObject()->getMaxHP() / 2;
-        }
-
-
-    };
 
 
 }

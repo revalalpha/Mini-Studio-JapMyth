@@ -10,7 +10,7 @@
 namespace BT
 {
 
-    class Wait : public IActionNode
+    class WaitInugami : public IActionNode
     {
     private:
         sf::Time m_duration;
@@ -18,7 +18,7 @@ namespace BT
         bool m_started = false;
 
     public:
-        Wait(ICompositeNode* parent, float duration)
+        WaitInugami(ICompositeNode* parent, float duration)
             : IActionNode(parent), m_duration(sf::seconds(duration)) {}
 
         Status tick() override
@@ -45,10 +45,10 @@ namespace BT
         }
     };
 
-    class Walk : public BehaviorNodeDecorator<Inugami, IActionNode>
+    class WalkInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        Walk(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        WalkInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -62,10 +62,10 @@ namespace BT
 
     };
 
-    class Sprint : public BehaviorNodeDecorator<Inugami, IActionNode>
+    class SprintInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        Sprint(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        SprintInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -78,10 +78,10 @@ namespace BT
 
 
     };
-    class Idle : public BehaviorNodeDecorator<Inugami, IActionNode>
+    class IdleInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        Idle(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        IdleInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -95,10 +95,10 @@ namespace BT
 
     };
 
-    class IsPlayerDead : public BehaviorNodeDecorator<Inugami, IActionNode>
+    class IsPlayerDeadInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        IsPlayerDead(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        IsPlayerDeadInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -116,39 +116,13 @@ namespace BT
 
 
 
-    class FirePistol : public BehaviorNodeDecorator<Inugami, IActionNode>
+
+
+
+    class MeleeInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        FirePistol(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
-        {
-        }
-
-        Status tick() override
-        {
-            if (!getGameObject()->isCurrentTargetValid())
-                return Failed;
-
-            if (m_delay == 0)
-            {
-                getGameObject()->fireWithPistol();
-                m_delay = 10;
-                return Success;
-            }
-            m_delay--;
-            return Running;
-
-
-        }
-    private:
-        int m_delay = 10;
-    };
-
-
-
-    class Melee : public BehaviorNodeDecorator<Inugami, IActionNode>
-    {
-    public:
-        Melee(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        MeleeInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -176,10 +150,10 @@ namespace BT
 
 
 
-    class FindEnemy : public BehaviorNodeDecorator<Inugami, IActionNode>
+    class FindEnemyInugami : public BehaviorNodeDecorator<Inugami, IActionNode>
     {
     public:
-        FindEnemy(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
+        FindEnemyInugami(ICompositeNode* parent) : BehaviorNodeDecorator<Inugami, IActionNode>(parent)
         {
         }
 
@@ -196,10 +170,10 @@ namespace BT
             return Success;
         }
     };
-	class PlayerDictance : public BehaviorNodeDecorator<Inugami, IConditionalNode>
+	class PlayerDictanceInugami : public BehaviorNodeDecorator<Inugami, IConditionalNode>
     {
     public:
-        PlayerDictance(ICompositeNode* node,float min, float max)
+        PlayerDictanceInugami(ICompositeNode* node,float min, float max)
             : BehaviorNodeDecorator<Inugami, IConditionalNode>(node)
 			,m_min(min)
 			,m_max(max)
@@ -218,10 +192,10 @@ namespace BT
         float m_max;
         
     };
-    class IsDead : public BehaviorNodeDecorator<Inugami, IConditionalNode>
+    class IsDeadInugami : public BehaviorNodeDecorator<Inugami, IConditionalNode>
     {
     public:
-        IsDead(ICompositeNode* node)
+        IsDeadInugami(ICompositeNode* node)
             : BehaviorNodeDecorator<Inugami, IConditionalNode>(node)
 
 
@@ -239,22 +213,7 @@ namespace BT
 
 
     };
-    class SecondPhase : public BehaviorNodeDecorator<Inugami, IConditionalNode>
-    {
-    public:
-        SecondPhase(ICompositeNode* node)
-            : BehaviorNodeDecorator<Inugami, IConditionalNode>(node)
-        {
-        }
 
-        bool condition()
-        {
-
-            return getGameObject()->getHP() <= getGameObject()->getMaxHP() / 2;
-        }
-
-
-    };
 
 
 }

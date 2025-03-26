@@ -6,16 +6,15 @@
 #include "OrbitalProjectile.h"
 
 
-int getPistolBulletSpeed() { return 300; }
-int getShotGunBulletSpeed() { return 220; }
-float getBossFluidFrictionCoef() { return 5.0f; }
+int getSamuraiPistolBulletSpeed() { return 300; }
+float getSamuraiFluidFrictionCoef() { return 5.0f; }
 
-Vec2 getBossSize()
+Vec2 getSamuraiSize()
 {
     return { 60.f, 60.f };
 }
 
-Vec2 getVelo() { return { 32.f, 32.f }; }
+Vec2 getSamuraiVelo() { return { 32.f, 32.f }; }
 
 Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
     : IGameObject(game)
@@ -25,34 +24,31 @@ Samurai::Samurai(IGameObjectContainer& game, const Vec2& position)
 
 {
 
-    //m_sprite = EnemySheet.testt();
-    
-    //m_sprite.setTexture(getOwner().getGame().getTextureCache().getTexture("Shinigami personnage principale.png"));
     auto* behavior = new BT::Retry(&m_rootNode1);
 
 
     
-    auto* Melee = new BT::PlayerDictance(behavior, 0.f, 100.f);
-    auto* Kunai = new BT::PlayerDictance(behavior, 400.f, 600.f);
-    new BT::Walk(behavior);
+    auto* Melee = new BT::PlayerDictanceSamurai(behavior, 0.f, 100.f);
+    auto* Kunai = new BT::PlayerDictanceSamurai(behavior, 400.f, 600.f);
+    new BT::WalkSamurai(behavior);
 
 
     auto* MeleeSequence = new BT::Sequence(Melee);
-    new BT::Idle(MeleeSequence);
-    new BT::Wait(MeleeSequence, 0.2f);
-    new BT::Melee(MeleeSequence);
-    new BT::Wait(MeleeSequence,1.2f);
+    new BT::IdleSamurai(MeleeSequence);
+    new BT::WaitSamurai(MeleeSequence, 0.2f);
+    new BT::MeleeSamurai(MeleeSequence);
+    new BT::WaitSamurai(MeleeSequence,1.2f);
 
-    new BT::Walk(behavior);
+    new BT::WalkSamurai(behavior);
     auto* DistanceSequence = new BT::Sequence(Kunai);
-    new BT::FirePistol(DistanceSequence);
-    new BT::Wait(DistanceSequence, 0.7f);
+    new BT::FireSamurai(DistanceSequence);
+    new BT::WaitSamurai(DistanceSequence, 0.7f);
 
-    auto* dead = new BT::IsDead(behavior);
+    auto* dead = new BT::IsDeadSamurai(behavior);
     auto* death = new BT::Retry(dead);
-    new BT::IsPlayerDead(death);
+    new BT::IsPlayerDeadSamurai(death);
 
-    new BT::IsPlayerDead(behavior);
+    new BT::IsPlayerDeadSamurai(behavior);
 
     
 }
@@ -77,7 +73,7 @@ bool Samurai::findValidTarget()
 
     for (auto& target : m_allGameObjects)
     {
-        if (target->gameObjectType()==PLAYERSHIP_TYPE)
+        if (target->gameObjectType()==PLAYERSHIP_TYPE || target->gameObjectType() == INVICIBLE_TYPE)
         {
             m_currentTarget = static_cast<PlayerShip*>(target);
             if (isCurrentTargetValid())
@@ -105,7 +101,7 @@ void Samurai::setSpeed(const int& Speed)
 void Samurai::fireWithPistol()
 {
     
-    new Fireball(m_owner,this, m_position, Vec2{ getPistolBulletSpeed() * std::cos(m_angle) ,  getPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"kunai.png",{0.12f,0.12f});
+    new Fireball(m_owner,this, m_position, Vec2{ getSamuraiPistolBulletSpeed() * std::cos(m_angle) ,  getSamuraiPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"kunai.png",{0.12f,0.12f});
 
     if (m_angle / 3.14159265f * 180.f < -160.f || m_angle / 3.14159265f * 180.f > 160.f)
     {
@@ -234,7 +230,7 @@ void Samurai::update(float deltaTime)
     Vec2 acceleration{ 0.f, 0.f };
 
     if (m_speed==0)
-        acceleration = -getBossFluidFrictionCoef() * m_velocity;
+        acceleration = -getSamuraiFluidFrictionCoef() * m_velocity;
 
     if (m_speed>0)
 		acceleration += m_speed * Vec2 { std::cos(m_angle), std::sin(m_angle) };
@@ -331,7 +327,7 @@ void Samurai::render(sf::RenderWindow& window)
 
 OBB Samurai::getBoundingBox() const
 {
-    Vec2 size = getBossSize();
+    Vec2 size = getSamuraiSize();
     return {
         m_position,
         size / 2.0f,

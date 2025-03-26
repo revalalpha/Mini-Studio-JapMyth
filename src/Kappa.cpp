@@ -31,28 +31,28 @@ Kappa::Kappa(IGameObjectContainer& game, const Vec2& position)
 
 
     
-    auto* run_away = new BT::PlayerDictance(behavior, 0.f, 500.f);
-    auto* Shoot = new BT::PlayerDictance(behavior, 510.f, 800.f);
-    auto* come_towards = new BT::PlayerDictance(behavior, 810.f, 10000.f);
+    auto* run_away = new BT::PlayerDictanceKappa(behavior, 0.f, 500.f);
+    auto* Shoot = new BT::PlayerDictanceKappa(behavior, 510.f, 800.f);
+    auto* come_towards = new BT::PlayerDictanceKappa(behavior, 810.f, 10000.f);
 
 
-    new BT::Walk(come_towards);
+    new BT::WalkKappa(come_towards);
 
     auto* DistanceSequence = new BT::Sequence(Shoot);
-    new BT::Idle(DistanceSequence);
-    new BT::Wait(DistanceSequence, 0.3f);
+    new BT::IdleKappa(DistanceSequence);
+    new BT::WaitKappa(DistanceSequence, 0.3f);
     new BT::FireKappa(DistanceSequence);
-    new BT::Wait(DistanceSequence, 2.f);
+    new BT::WaitKappa(DistanceSequence, 2.f);
 
 
 
-    new BT::OppositeWalk(run_away);
+    new BT::OppositeWalkKappa(run_away);
 
-    auto* dead = new BT::IsDead(behavior);
+    auto* dead = new BT::IsDeadKappa(behavior);
     auto* death = new BT::Retry(dead);
-    new BT::IsPlayerDead(death);
+    new BT::IsPlayerDeadKappa(death);
 
-    new BT::IsPlayerDead(behavior);
+    new BT::IsPlayerDeadKappa(behavior);
 
     
 }
@@ -77,7 +77,7 @@ bool Kappa::findValidTarget()
 
     for (auto& target : m_allGameObjects)
     {
-        if (target->gameObjectType()==PLAYERSHIP_TYPE)
+        if (target->gameObjectType()==PLAYERSHIP_TYPE || target->gameObjectType() == INVICIBLE_TYPE)
         {
             m_currentTarget = static_cast<PlayerShip*>(target);
             if (isCurrentTargetValid())

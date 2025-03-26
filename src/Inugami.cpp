@@ -31,20 +31,20 @@ Inugami::Inugami(IGameObjectContainer& game, const Vec2& position)
 
 
     
-    auto* Melee = new BT::PlayerDictance(behavior, 0.f, 100.f);
-    new BT::Sprint(behavior);
+    auto* Melee = new BT::PlayerDictanceInugami(behavior, 0.f, 100.f);
+    new BT::SprintInugami(behavior);
 
 
     auto* MeleeSequence = new BT::Sequence(Melee);
-    new BT::Walk(MeleeSequence);
-    new BT::Melee(MeleeSequence);
-    new BT::Wait(MeleeSequence,1.f);
+    new BT::WalkInugami(MeleeSequence);
+    new BT::MeleeInugami(MeleeSequence);
+    new BT::WaitInugami(MeleeSequence,1.f);
 
-    auto* dead = new BT::IsDead(behavior);
+    auto* dead = new BT::IsDeadInugami(behavior);
     auto* death = new BT::Retry(dead);
-    new BT::IsPlayerDead(death);
+    new BT::IsPlayerDeadInugami(death);
 
-    new BT::IsPlayerDead(behavior);
+    new BT::IsPlayerDeadInugami(behavior);
 
     
 }
@@ -69,7 +69,7 @@ bool Inugami::findValidTarget()
 
     for (auto& target : m_allGameObjects)
     {
-        if (target->gameObjectType()==PLAYERSHIP_TYPE)
+        if (target->gameObjectType()==PLAYERSHIP_TYPE || target->gameObjectType() == INVICIBLE_TYPE)
         {
             m_currentTarget = static_cast<PlayerShip*>(target);
             if (isCurrentTargetValid())
