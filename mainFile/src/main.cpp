@@ -1,14 +1,11 @@
-#include "engine.h"
-#include "resourceManager.h"
+#include "Game.h"
+#include "SceneManager.h"
 
-int main(int argc, char* argv[])
+
+
+int main(int argc, char** argv)
 {
-    PathManager::initialize(argv[0]);
 
-    SceneManager sceneManager(1920, 1080, "Mini-Studio");
-    Engine game(sceneManager);
-
-    game.exec();
-
-    return 0;
+    SceneManager test(1920, 1080,"Bushido no Michi", argv[0]);
+    test.exec();
 }

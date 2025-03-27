@@ -1,8 +1,9 @@
 #include "SceneManager.h"
 #include "game.h"
-#include "menu.h"
-#include "pause.h"
 #include <iostream>
+#include "PauseScene.h"
+#include "GameScene.h"
+#include "TitleScene.h"
 
 enum SceneStat
 {
@@ -12,17 +13,18 @@ enum SceneStat
     , PAUSE
 };
 
-SceneManager::SceneManager(const int& width, const int& height, const std::string& title)
+SceneManager::SceneManager(const int& width, const int& height, const std::string& title, const std::string& execPath)
     : m_window(std::make_unique<sf::RenderWindow>(sf::VideoMode(width, height), title, sf::Style::Fullscreen))
     , m_currentScene(nullptr)
 {
-    /*m_scenes.push_back(std::make_unique<Menu>(m_window.get(), this, 30.f));*/
-    m_scenes.push_back(std::make_unique<Game>(m_window.get(), 60.f));
-    //m_scenes.push_back(std::make_unique<Pause>(m_window.get(), 30.f));
+    
+    m_scenes.push_back(std::make_unique<TitleScene>(m_window.get(), this, 30.f, execPath));
+    m_scenes.push_back(std::make_unique<GameScene>(m_window.get(), this, 60.f, execPath));
+    m_scenes.push_back(std::make_unique<PauseScene>(m_window.get(), this, 30.f, execPath));
     m_currentScene = m_scenes.front().get();
 }
 
-void SceneManager::push_back(std::unique_ptr<SceneBase> scene)
+void SceneManager::push_back(std::unique_ptr<IScene> scene)
 {
     m_scenes.push_back(std::move(scene));
 }
@@ -32,7 +34,7 @@ sf::RenderWindow* SceneManager::getWindow()
     return m_window.get();
 }
 
-SceneBase* SceneManager::getCurrentScene()
+IScene* SceneManager::getCurrentScene()
 {
     return m_currentScene;
 }
@@ -53,20 +55,8 @@ void SceneManager::processInput()
 
         if (event.type == sf::Event::KeyPressed)
         {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::P))
-            {
-                if (m_currentScene != m_scenes.front().get())
-                {
-                    if (m_currentScene == m_scenes[GAME].get())
-                        m_currentScene = m_scenes[PAUSE].get();
-                    else if (m_currentScene == m_scenes[PAUSE].get())
-                        m_currentScene = m_scenes[GAME].get();
-                    else if (m_currentScene == m_scenes[CREDIT].get())
-                        m_currentScene = m_scenes[MENU].get();
-                }
-            }
 
-            if (event.key.code == sf::Keyboard::Escape)
+            if (event.key.code == sf::Keyboard::P)
                 m_window->close();
         }
 
@@ -76,6 +66,9 @@ void SceneManager::processInput()
 
 void SceneManager::exec()
 {
+
+
+
     // We start the clock
     const sf::Clock clock;
     const sf::Clock spawnClock;

@@ -1,73 +1,56 @@
 #pragma once
 
-#include "hero.h"
-#include "sceneBase.h"
+#include "TextureCache.h"
+#include "IGameObject.h"
 
-class Boss;
+#include <SFML/Graphics.hpp>
 
-class Game : public SceneBase
+class IGameObject;
+
+#define private_members private
+#define private_function private
+#define private_friend_function(Cls) private
+
+class Game : public ::IGameObjectContainer
 {
 public:
-    Game(sf::RenderWindow* window, const float& framerate);
-    ~Game() override = default;
+    sf::Font font;
 
-    // PLAYER
-    void setPlayer();
-    void setBoss();
-    Hero& getPlayer();
-    Boss* getBoss() const;
-    void checkCollision();
+    friend class IGameObject;
 
-    // ENEMIES
-    void spawnEnemy(sf::RenderWindow* window);
+    Game(sf::RenderWindow& window,const std::string& execPath);
+    ~Game();
 
-    // GAME MAP
-    void setBackground(sf::RenderWindow* window);
-    void setGroundTexture(sf::RenderWindow* window);
-    sf::FloatRect getGroundHitbox();
-    sf::FloatRect getPlatformHitbox();
-    sf::FloatRect GetWindowCollision();
+    void handleInputs(const sf::Event& event);
 
-    void processInput(const sf::Event& event) override;
-    void update(const float& deltaTime) override;
-    void render() override;
+    void update(const float& deltaTime);
 
-    void drawHitboxes();
+    void render(sf::RenderWindow& window);
 
-private:
-    int m_enemiesCount;
-    Hero m_player;
-    /*std::unique_ptr<Boss> m_boss;*/
+    TextureCache& getTextureCache();
+    void Spawner();
+    
+    virtual Game& getGame() override { return *this; }
+    Vec2 getWindowSize()const;
+    void renderBoundingBox(sf::RenderWindow& window);
+    float m_SpawnTime = 5.f;
+    bool spawnBoss1=false;
+private_function:
+    void detectCollision();
+    void onCollision(IGameObject* go1, IGameObject* go2);
+    
 
-    // MAP
-    sf::RectangleShape m_rectangle_shape;
-    sf::Texture m_mapTexture;
+private_members:
+    ::sf::RenderWindow* m_window;
+    TextureCache m_textureCache;
+    float m_Width;
+    float m_Height;
+    sf::Vector2f worldPos;
+    sf::Texture m_background;
+    sf::Sprite m_backgroundSprite;
 
-    // PLATFORM
-    sf::RectangleShape m_platform;
-    sf::Texture m_platformTexture;
-
-    // BACKGROUND
-    sf::Texture m_backgroundTexture;
-    sf::RectangleShape m_backgroundShape;
-    sf::Music m_gameMusic;
-
-    // SCORE
-    sf::Font m_scoreFont;
-    sf::Text m_scoreText;
-    int m_score = 0;
-
-    // FPS COUNTER
-    sf::Font m_fpsFont;
-    sf::Text m_fpsText;
-    SceneBase* m_currentScene;
-    sf::Clock m_fpsClock;
-    int m_fpsCounter = 0;
-    float m_fpsStartTime = 0.f;
-
-    // GAME OVER
-    void displayGameOver();
-    sf::Text m_gameOverText;
-    sf::Text m_winText;
-    bool m_isGameOver = false;
+    bool m_renderBoundingBox=false;
+    
+    sf::Clock m_clockSpawnTime;
+    sf::Time m_elapsedTimeSpawn;
 };
