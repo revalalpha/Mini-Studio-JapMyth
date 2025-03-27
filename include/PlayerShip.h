@@ -23,9 +23,10 @@ public:
     float getAngle() const;
 
     bool isKick;
-    int m_score=0;
+    int m_score=800;
 private:
     sf::Sprite m_sprite;
+    sf::Sprite m_lifeBar;
     SheetToBeAnimated PlayerSheet;
     sf::View m_view;
     //  Inputs
@@ -34,12 +35,13 @@ private:
     bool m_isTurningRight;
     bool m_isDecelerating;
 
+    bool spawnBoss;
     //  Gameplay
     int m_HP;
     int m_MaxHP;
     bool m_isDead;
 
-    //  Physics
+    
     float m_angle;
     float m_mouseAngle;
     Vec2 m_position;

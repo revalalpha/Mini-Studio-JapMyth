@@ -1,4 +1,4 @@
-#include "Fireball.h"
+#include "Projectile.h"
 
 #include "Game.h"
 #include "Inugami.h"
@@ -6,12 +6,12 @@
 #include "PlayerShip.h"
 #include "Samurai.h"
 
-Vec2 getFireballSize()
+Vec2 getprojectileSize()
 {
     return { 16.f, 16.f };
 }
 
-Fireball::Fireball(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity,const GameObjectType& type,const std::string& textureFile,Vec2 Scale)
+Projectile::Projectile(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity,const GameObjectType& type,const std::string& textureFile,Vec2 Scale)
     : IGameObject(game)
 	, m_owner(owner)
     , m_position(position)
@@ -24,19 +24,19 @@ Fireball::Fireball(IGameObjectContainer& game, IGameObject* owner, const Vec2& p
     
 }
 
-void Fireball::handleInputs(const sf::Event& event)
+void Projectile::handleInputs(const sf::Event& event)
 {
 
 }
 
-void Fireball::update(float deltaTime)
+void Projectile::update(float deltaTime)
 {
     float dt = 1.f / 60.f;
     m_position += m_velocity * dt;
     
 }
 
-void Fireball::render(sf::RenderWindow& window)
+void Projectile::render(sf::RenderWindow& window)
 {
     m_sprite.setRotation(m_angle / 3.14159265f * 180.f);
     m_sprite.setOrigin(m_sprite.getLocalBounds().getSize().x / 2.f, m_sprite.getLocalBounds().getSize().y / 2.f);
@@ -44,9 +44,9 @@ void Fireball::render(sf::RenderWindow& window)
     window.draw(m_sprite);
 }
 
-OBB Fireball::getBoundingBox() const
+OBB Projectile::getBoundingBox() const
 {
-    Vec2 size = getFireballSize();
+    Vec2 size = getprojectileSize();
 
     float angle = 0.0f;
     if (m_velocity.getLength() > 0.0f) {
@@ -60,14 +60,14 @@ OBB Fireball::getBoundingBox() const
     };
 }
 
-GameObjectType Fireball::gameObjectType()
+GameObjectType Projectile::gameObjectType()
 {
     return m_type;
 }
 
 
 
-float Fireball::getOwnerAngle() const
+float Projectile::getOwnerAngle() const
 {
     if (!m_owner)
         return 0.f;
@@ -87,7 +87,7 @@ float Fireball::getOwnerAngle() const
     }
 }
 
-bool Fireball::IsOwnerDead() const
+bool Projectile::IsOwnerDead() const
 {
     if (!m_owner)
         return true;

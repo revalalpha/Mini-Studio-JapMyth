@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Game.h"
-#include "Fireball.h"
+#include "Projectile.h"
 #include "OrbitalProjectile.h"
 
 
@@ -39,9 +39,11 @@ PlayerShip::PlayerShip(IGameObjectContainer& game, const Vec2& position)
     , KBTime(0.5f)
 	, m_meleerate(0.5f)
 	, m_Attacking(false)
+	, spawnBoss(true)
 	, m_view(sf::Vector2f(m_position.x, m_position.y), sf::Vector2f(1920, 1080))
 
 {
+    m_lifeBar.setTexture(getOwner().getGame().getTextureCache().getTexture("katana vieJ.png"));
     m_sprite = PlayerSheet.Animation(1.f / 60.f, 1, 1, 1, 0.f, true);
     m_view.zoom(0.8f);
 }
@@ -94,12 +96,31 @@ void PlayerShip::handleInputs(const sf::Event& event)
 
 void PlayerShip::update(float deltaTime)
 {
+    if (m_score>500)
+    {
+        m_owner.getGame().m_SpawnTime = 3.f;
+
+    }
+    if (m_score > 1000)
+    {
+        if (spawnBoss)
+        {
+	        m_owner.getGame().spawnBoss1 = true;
+            spawnBoss = false;
+        }
+    }
+
+    if (m_score > 2500)
+    {
+        m_owner.getGame().m_SpawnTime = 1.f;
+        
+    }
 
     acceleration={ 0.f, 0.f };
     if (m_Shooting)
     {
         m_Shooting = false;
-        new Fireball(m_owner, this, m_position, Vec2{ 250.f * std::cos(m_mouseAngle) ,  250.f * std::sin(m_mouseAngle) },PLAYERprojectile_TYPE,"kunai.png",{0.12f,0.12f });
+        new Projectile(m_owner, this, m_position, Vec2{ 250.f * std::cos(m_mouseAngle) ,  250.f * std::sin(m_mouseAngle) },PLAYERprojectile_TYPE,"kunai.png",{0.12f,0.12f });
         if (m_mouseAngle / 3.14159265f * 180.f < -160.f || m_mouseAngle / 3.14159265f * 180.f > 160.f)
         {
 
@@ -255,13 +276,13 @@ void PlayerShip::update(float deltaTime)
     {
 	    
         
-        if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 650.f)&& m_position.y < (m_owner.getGame().getWindowSize().y / 2.f - 640.f))
+        if (m_position.y > (m_owner.getGame().getWindowSize().y / 2.f - 650.f)&& m_position.y < (m_owner.getGame().getWindowSize().y / 2.f - 630.f))
             m_position = { PreviousPos.x ,PreviousPos.y - 0.5f };
-        if (m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f)&& m_position.y > (m_owner.getGame().getWindowSize().y / 2.f + 540.f))
+        if (m_position.y < (m_owner.getGame().getWindowSize().y / 2.f + 550.f)&& m_position.y > (m_owner.getGame().getWindowSize().y / 2.f + 530.f))
             m_position = { PreviousPos.x  ,PreviousPos.y + 0.5f };
-        if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 490.f)&& m_position.x < (m_owner.getGame().getWindowSize().x / 2.f - 480.f))
+        if (m_position.x > (m_owner.getGame().getWindowSize().x / 2.f - 490.f)&& m_position.x < (m_owner.getGame().getWindowSize().x / 2.f - 470.f))
             m_position = { PreviousPos.x - 0.5f,PreviousPos.y };
-        if (m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 490.f)&& m_position.x > (m_owner.getGame().getWindowSize().x / 2.f + 480.f))
+        if (m_position.x < (m_owner.getGame().getWindowSize().x / 2.f + 490.f)&& m_position.x > (m_owner.getGame().getWindowSize().x / 2.f + 470.f))
             m_position = { PreviousPos.x + 0.5f ,PreviousPos.y };
     }
     else
@@ -289,20 +310,29 @@ void PlayerShip::render(sf::RenderWindow& window)
 
     }
 
-    m_sprite.setScale(0.25f, 0.25f);
+    m_sprite.setScale(0.2f, 0.2f);
     m_sprite.setOrigin(m_sprite.getLocalBounds().getSize().x / 2.f, m_sprite.getLocalBounds().getSize().y / 2.f);
     m_sprite.setPosition(m_position.x, m_position.y);
     m_view.setCenter(sf::Vector2f(m_position.x, m_position.y));
-    
-    sf::Text HP("HP : "+std::to_string(m_HP)+" / "+ std::to_string(m_MaxHP),m_owner.getGame().font,20);
-    HP.setPosition(m_position.x-500, m_position.y - 300);
+
+    m_lifeBar.setOrigin(m_lifeBar.getGlobalBounds().getSize().x, m_lifeBar.getGlobalBounds().getSize().y);
+    m_lifeBar.setPosition(m_position.x - 400, m_position.y - 300);
+
+    sf::RectangleShape rec({-11.f *(m_MaxHP-m_HP), m_lifeBar.getGlobalBounds().getSize().y - 20});
+    rec.setFillColor(sf::Color::Black);
+    rec.setPosition(m_position.x - 433, m_position.y - 322);
+
+    //sf::Text HP("HP : "+std::to_string(m_HP)+" / "+ std::to_string(m_MaxHP),m_owner.getGame().font,20);
+    //HP.setPosition(m_position.x-500, m_position.y - 300);
 
     sf::Text Score("Score : " + std::to_string(m_score) , m_owner.getGame().font, 20);
     Score.setPosition(m_position.x + 500, m_position.y + 300);
 
     window.draw(m_sprite);
-    window.draw(HP);
+    //window.draw(HP);
     window.draw(Score);
+    window.draw(m_lifeBar);
+    window.draw(rec);
     window.setView(m_view);
     sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
 

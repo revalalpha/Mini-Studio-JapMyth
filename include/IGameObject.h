@@ -22,7 +22,7 @@ enum GameObjectType
     , SAMURAI_TYPE=7
     , KAPPA_TYPE=8
     , INUGAMI_TYPE=9
-
+    ,BOSS1_TYPE=10
 
 };
 

@@ -33,6 +33,8 @@ public:
     virtual Game& getGame() override { return *this; }
     Vec2 getWindowSize()const;
     void renderBoundingBox(sf::RenderWindow& window);
+    float m_SpawnTime = 5.f;
+    bool spawnBoss1=false;
 private_function:
     void detectCollision();
     void onCollision(IGameObject* go1, IGameObject* go2);
@@ -47,7 +49,8 @@ private_members:
     sf::Texture m_background;
     sf::Sprite m_backgroundSprite;
 
-    const float m_SpawnTime=5.f;
+    
+    
     sf::Clock m_clockSpawnTime;
     sf::Time m_elapsedTimeSpawn;
 };

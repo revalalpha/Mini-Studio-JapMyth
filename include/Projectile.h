@@ -6,10 +6,10 @@
 
 class IGameObjectContainer;
 
-class Fireball : public IGameObject
+class Projectile : public IGameObject
 {
 public:
-    Fireball(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity, const GameObjectType& type, const std::string& textureFile, Vec2 Scale={1.f,1.f});
+    Projectile(IGameObjectContainer& game, IGameObject* owner, const Vec2& position, const Vec2& velocity, const GameObjectType& type, const std::string& textureFile, Vec2 Scale={1.f,1.f});
 
     void handleInputs(const sf::Event& event) override;
     void update(float deltaTime) override;

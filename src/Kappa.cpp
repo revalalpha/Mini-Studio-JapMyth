@@ -1,7 +1,7 @@
 #include "Kappa.h"
 
 #include "KappaBehavior.h"
-#include "Fireball.h"
+#include "Projectile.h"
 #include "Game.h"
 #include "OrbitalProjectile.h"
 
@@ -105,7 +105,7 @@ void Kappa::setSpeed(const int& Speed)
 void Kappa::fireWithPistol()
 {
     
-    new Fireball(m_owner,this, m_position, Vec2{ getKappaPistolBulletSpeed() * std::cos(m_angle) ,  getKappaPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"bubble.png",{0.12f,0.12f});
+    new Projectile(m_owner,this, m_position, Vec2{ getKappaPistolBulletSpeed() * std::cos(m_angle) ,  getKappaPistolBulletSpeed() * std::sin(m_angle) },ENEMYprojectile_TYPE,"bubble.png",{0.12f,0.12f});
 
     if (m_angle / 3.14159265f * 180.f < -160.f || m_angle / 3.14159265f * 180.f > 160.f)
     {
