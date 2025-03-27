@@ -11,7 +11,7 @@ On a pas eu le temps de finir notre moteur sur le branch new-dev-Work.
 - Clique Droit : Tirer
 - Espace : Esquive
 - Echape : menu de pause
-- - B : afficher les boundingBox
+- B : afficher les boundingBox
 - P : quitter
 
 
